@@ -4,7 +4,7 @@ from django.db import models
 class staff(models.Model):#人员表
     staff_id=models.IntegerField(primary_key=True)
     join_id=models.DateTimeField(auto_now=False)
-    name=models.CharField(max_length=50,null=True)
+    name=models.CharField(max_length=200,null=True)
     username=models.CharField(max_length=50,null=True)
     password=models.CharField(max_length=50,null=True)
     scenic_plot=models.ForeignKey(to='scenic_plot',on_delete=models.CASCADE)
