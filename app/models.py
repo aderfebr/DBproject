@@ -76,5 +76,13 @@ class warning(models.Model):
     warn_description = models.CharField(max_length=50, null=True)
     info = models.CharField(max_length=50, null=True)
 
-
+class trace_tabel_staff(models.Model):
+    user_id=models.IntegerField()
+    time=models.DateTimeField()
+    staff_id=models.IntegerField(primary_key=True)
+    join_id=models.DateTimeField(auto_now=False)
+    name=models.CharField(max_length=50,null=True)
+    username=models.CharField(max_length=50,null=True)
+    password=models.CharField(max_length=50,null=True)
+    scenic_plot=models.ForeignKey(to='scenic_plot',on_delete=models.CASCADE)
 
