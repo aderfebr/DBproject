@@ -10,7 +10,7 @@
       <div id="top">
         <ul>
           <li><h1>&ensp;<i class="fa fa-street-view"/>&ensp;人员</h1></li>
-          <li><button id="add">＋</button></li>
+          <li><button id="add">添加</button></li>
         </ul>
         <div style="clear: both;"></div>
       </div>
@@ -19,17 +19,19 @@
         <table>
           <thead>
             <tr>
-              <th>字段1</th>
-              <th>字段2</th>
-              <th>字段3</th>
+              <th>员工编号</th>
+              <th>加入时间</th>
+              <th>姓名</th>
+              <th>用户名</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1111111</td>
-              <td>1111111111</td>
-              <td>111111111</td>
+            <tr v-for="i in content">
+              <td>{{ i.staff_id }}</td>
+              <td>{{ i.join_id }}</td>
+              <td>{{ i.name }}</td>
+              <td>{{ i.username }}</td>
               <td><button id="change">更改</button>&ensp;<button id="delete">删除</button></td>
             </tr>
           </tbody>
@@ -38,6 +40,27 @@
     </div>
   </div>
 </template>
+
+<script>
+export default{
+  data(){
+    return{
+      content:null,
+    }
+  },
+  created(){
+    this.getdata();
+  },
+  methods:{
+		getdata(){
+			this.axios.get('http://localhost:8000/api/query/')
+			.then(res=>{
+				this.content=res.data
+			})
+		}
+  }
+}
+</script>
 
 <style scoped>
 #main{
@@ -80,6 +103,8 @@ li#selected{
 }
 #container{
   padding: 1%;
+  height: 85%;
+  overflow-y: scroll;
 }
 h1{
   font-size: 40px;
@@ -109,9 +134,11 @@ button{
   transition: all 0.2s;
 }
 button#add{
+  width: 80px;
+  height: 55px;
   background-color: #28a745;
   color: #fff;
-  font-size: 40px;
+  font-size: 25px;
   font-weight: bolder;
 }
 button#change{
@@ -128,6 +155,7 @@ button:hover{
 a{
   color: white;
   text-decoration: none;
+  transition: all 0.2s;
 }
 a:hover{
   color: #17a2b8;

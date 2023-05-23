@@ -40,8 +40,7 @@ def staff_job():
 
 
 def query(request):
-    id=request.GET.get('id')
-    res=staff.objects.filter(staff_id=id).all().values()
+    res=staff.objects.all().values()
     res=list(res)
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
