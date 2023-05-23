@@ -57,7 +57,7 @@ ROOT_URLCONF = 'DBproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['frontend/dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,8 +70,11 @@ TEMPLATES = [
     },
 ]
 
+import os
 WSGI_APPLICATION = 'DBproject.wsgi.application'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,"frontend","dist","static")
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

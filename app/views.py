@@ -10,7 +10,6 @@ def delete_data(request):
     scenic_plot.objects.all().delete()
     return HttpResponse("success")
 
-
 def insert_test_sc(request):
     sc_plot=scenic_plot(plot_id=1,plot_name="景点",plot_address="上海市")
     sc_plot.save()
@@ -38,14 +37,10 @@ def staff_job():
         secp=security_personnel(staff_id=data,grade=random.randint(1,10))
         secp.save()
 
-
 def query(request):
     res=staff.objects.all().values()
     res=list(res)
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
-    
-
-
-
-
+def home(request):
+    return render(request, "index.html")
