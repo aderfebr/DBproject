@@ -1,6 +1,9 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render
 from .models import staff,security_personnel,maintain_personnel,scenic_plot
 import random
+import json
+from django.core.paginator import Paginator
+from django.http import JsonResponse,HttpResponse
 #测试数据
 def delete_data(request):
     staff.objects.all().delete()
@@ -36,6 +39,16 @@ def staff_job():
         secp.save()
 
 
+def query(request):
+    id=request.GET.get('id')
+    res=staff.objects.filter(staff_id=id).all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
     
 
-# Create your views here.
+   
+
+
+
+
