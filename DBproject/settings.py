@@ -82,11 +82,11 @@ STATICFILES_DIRS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'crowdvis',
+        'NAME': 'dbproject',
         'HOST': '127.0.0.1',
         'PORT': 3306,
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '123456',
     }
 }
 

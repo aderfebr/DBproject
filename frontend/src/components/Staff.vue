@@ -1,5 +1,10 @@
 <template>
   <div id="main">
+    <div id="popAdd" v-if="showAdd">
+      <div id="header">&ensp;添加数据</div>
+      <div id="body"></div>
+      <div id="footer"><button @click="showAdd=0">&ensp;&ensp;&ensp;确认&ensp;&ensp;&ensp;</button></div>
+    </div>
     <div id="left">
       <ul>
         <li><router-link to="/"><i class="fa fa-home"/>&ensp;首页</router-link></li>
@@ -10,7 +15,7 @@
       <div id="top">
         <ul>
           <li><h1>&ensp;<i class="fa fa-street-view"/>&ensp;人员</h1></li>
-          <li><button id="add">添加</button></li>
+          <li><button id="add" @click="showAdd=1">添加</button></li>
         </ul>
         <div style="clear: both;"></div>
       </div>
@@ -46,6 +51,7 @@ export default{
   data(){
     return{
       content:null,
+      showAdd:0,
     }
   },
   created(){
@@ -70,6 +76,46 @@ export default{
   display: flex;
 	box-shadow: 0 0 5px rgb(57,167,176),
 				      0 0 10px rgb(56,183,145);
+}
+#popAdd{
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 20%;
+  top: 15%;
+  width: 60%;
+  height: 70%;
+  z-index: 3;
+  border-radius: 12px;
+  border: 1px solid #f5f5f5;
+  background-color: #fff;
+}
+#popAdd #header{
+  position: absolute;
+  width: 100%;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  background-color: rgb(56,183,145);
+  color: #fff;
+  flex: 3;
+  font-size: 30px;
+  padding: 50px 0 10px 0;
+  border-bottom: 1px solid rgb(177, 176, 176);
+}
+#popAdd #body{
+  flex: 15;
+}
+#popAdd #footer{
+  background-color: #f5f5f5;
+  text-align: center;
+  flex: 1;
+}
+#popAdd button{
+  background-color: rgb(57,167,176);
+  color: #fff;
+  padding: 10px;
+  margin: 20px;
+  font-size: 25px;
 }
 #left{
   flex: 1;
@@ -103,7 +149,7 @@ li#selected{
 }
 #container{
   padding: 1%;
-  height: 85%;
+  height: 80%;
   overflow-y: scroll;
 }
 h1{
@@ -160,5 +206,18 @@ a{
 a:hover{
   color: #17a2b8;
   transition: all 0.2s;
+}
+div::-webkit-scrollbar {
+  width: 10px;
+  }
+div::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.4);
+}
+div::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.4);
+  border-radius: 0;
+  background: rgba(0,0,0,0.2);
 }
 </style>
