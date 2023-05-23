@@ -47,8 +47,6 @@ def query(request):
 
     
 
-   
-
 
 
 

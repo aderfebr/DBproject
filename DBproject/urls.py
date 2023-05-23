@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/get/",views.insert_test_sc),
     path("delete/",views.delete_data),
-    path("api/query/",views.query)
+    path("api/query/",views.query),
 ]
