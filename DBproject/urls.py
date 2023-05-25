@@ -23,4 +23,6 @@ urlpatterns = [
     path("test/",views.insert_test_sc),
     path("delete/",views.delete_data),
     path("api/query/",views.query),
+    path("api/add_staff/",views.add_staff),
+    path("api/add_staff/insert/",views.add_staff_main),
 ]
