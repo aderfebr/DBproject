@@ -97,11 +97,14 @@ def query(request):
 ###########################################👆测试数据👆#########################################################
 
 def add_staff(request):
-    res=scenic_plot.objects.values('plot_id')
+    res=scenic_plot.objects.all().values('plot_id')
     res=list(res)
-    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+    res_id=[]
+    for data in res:
+        res_id.append(data['plot_id'])
+    return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
 
-def add_staff_main(request):
+def add_staff_main(request):   #insert
     staff_id=request.POST.get('staff_id')
     join_time=request.POST.get('join_id')
     name=request.POST.get('name')
@@ -113,6 +116,14 @@ def add_staff_main(request):
     staff.scenic_plot=plot_id
     staff_add.save()
 
+def update_staff_main(request):   #update
+    staff_id=request.POST.get('staff_id')
+    join_time=request.POST.get('join_id')
+    name=request.POST.get('name')
+    username=request.POST.get('username')
+    password=request.POST.get('password')
+    plot_id=request.POST.get('scenic_plot_id')
+    staff.objects.filter(staff_id=staff_id).update(join_id=join_time,name=name,username=username,password=password,scenic_plot=plot_id)
 
 
 
