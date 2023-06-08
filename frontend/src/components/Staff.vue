@@ -2,8 +2,38 @@
   <div id="main">
     <div id="popAdd" v-if="showAdd">
       <div id="header">&ensp;添加数据</div>
-      <div id="body"></div>
-      <div id="footer"><button @click="showAdd=0">&ensp;&ensp;&ensp;确认&ensp;&ensp;&ensp;</button></div>
+      <div id="body">
+        <div style="flex:1;overflow: hidden;">
+          <div>员工编号<br><input type="text" v-model="staff_id"></div>
+          <div>姓名<br><input type="text" v-model="name"></div>
+          <div>密码<br><input type="text" v-model="password"></div>
+        </div>
+        <div style="flex:1;overflow: hidden;">
+          <div>加入时间<br><input type="text" v-model="join_id"></div>
+          <div>用户名<br><input type="text" v-model="username"></div>
+          <div>所属景点<br><input type="text" v-model="plot"></div>
+        </div>
+      </div>
+      <div id="footer">
+        <button @click="add_commit()">&ensp;&ensp;&ensp;确认&ensp;&ensp;&ensp;</button>
+        <button @click="cancel()">&ensp;&ensp;&ensp;取消&ensp;&ensp;&ensp;</button>
+      </div>
+    </div>
+    <div id="popAdd" v-if="showChange">
+      <div id="header">&ensp;更改数据</div>
+      <div id="body">
+        <div style="flex:1;overflow: hidden;">
+          <div>员工编号<br><input type="text" v-model="staff_id" readonly="readonly"></div>
+          <div>姓名<br><input type="text" v-model="name"></div>
+          <div>密码<br><input type="text" v-model="password"></div>
+        </div>
+        <div style="flex:1;overflow: hidden;">
+          <div>加入时间<br><input type="text" v-model="join_id"></div>
+          <div>用户名<br><input type="text" v-model="username"></div>
+          <div>所属景点<br><input type="text" v-model="scenic_plot_id"></div>
+        </div>
+      </div>
+      <div id="footer"><button @click="change_commit()">&ensp;&ensp;&ensp;确认&ensp;&ensp;&ensp;</button></div>
     </div>
     <div id="left">
       <ul>
@@ -15,7 +45,7 @@
       <div id="top">
         <ul>
           <li><h1>&ensp;<i class="fa fa-street-view"/>&ensp;人员</h1></li>
-          <li><button id="add" @click="showAdd=1">添加</button></li>
+          <li><button id="add" @click="add()">添加</button></li>
         </ul>
         <div style="clear: both;"></div>
       </div>
@@ -28,6 +58,8 @@
               <th>加入时间</th>
               <th>姓名</th>
               <th>用户名</th>
+              <th>密码</th>
+              <th>所属景点</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -37,7 +69,9 @@
               <td>{{ i.join_id }}</td>
               <td>{{ i.name }}</td>
               <td>{{ i.username }}</td>
-              <td><button id="change">更改</button>&ensp;<button id="delete">删除</button></td>
+              <td>{{ i.password }}</td>
+              <td>{{ i.scenic_plot_id }}</td>
+              <td><button id="change" @click="change(i)">更改</button>&ensp;<button id="delete">删除</button></td>
             </tr>
           </tbody>
         </table>
@@ -52,6 +86,13 @@ export default{
     return{
       content:null,
       showAdd:0,
+      showChange:0,
+      staff_id:"",
+      join_id:"",
+      name:"",
+      username:"",
+      password:"",
+      scenic_plot_id:"",
     }
   },
   created(){
@@ -63,7 +104,49 @@ export default{
 			.then(res=>{
 				this.content=res.data
 			})
-		}
+		},
+    add(i){
+      this.staff_id="";
+      this.join_id="";
+      this.name="";
+      this.username="";
+      this.password="";
+      this.scenic_plot_id="";
+      this.showAdd=1;
+    },
+    change(i){
+      this.staff_id=i.staff_id;
+      this.join_id=i.join_id;
+      this.name=i.name;
+      this.username=i.username;
+      this.password=i.password;
+      this.scenic_plot_id=i.scenic_plot_id;
+      this.showChange=1;
+    },
+    add_commit(){
+      this.showAdd=0;
+			this.axios.post('http://localhost:8000/api/add_staff/insert/',{
+        staff_id:this.staff_id,
+        join_id:this.join_id,
+        name:this.name,
+        username:this.username,
+        password:this.password,
+        scenic_plot_id:this.scenic_plot_id,
+      }
+      )
+    },
+    change_commit(){
+      this.showChange=0;
+			this.axios.post('http://localhost:8000/api/add_staff/update/',{
+        staff_id:this.staff_id,
+        join_id:this.join_id,
+        name:this.name,
+        username:this.username,
+        password:this.password,
+        scenic_plot_id:this.scenic_plot_id,
+      }
+      )
+    },
   }
 }
 </script>
@@ -87,11 +170,9 @@ export default{
   height: 70%;
   z-index: 3;
   border-radius: 12px;
-  border: 1px solid #f5f5f5;
   background-color: #fff;
 }
 #popAdd #header{
-  position: absolute;
   width: 100%;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
@@ -104,6 +185,14 @@ export default{
 }
 #popAdd #body{
   flex: 15;
+  font-size: 20px;
+  padding: 20px;
+  display: flex;
+}
+#popAdd #body input{
+  margin: 5px;
+  height: 25px;
+  font-size: 20px;
 }
 #popAdd #footer{
   background-color: #f5f5f5;
@@ -209,7 +298,7 @@ a:hover{
 }
 div::-webkit-scrollbar {
   width: 10px;
-  }
+}
 div::-webkit-scrollbar-thumb {
   border-radius: 10px;
   box-shadow: inset 0 0 5px rgba(0,0,0,0.4);
@@ -219,5 +308,22 @@ div::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px rgba(0,0,0,0.4);
   border-radius: 0;
   background: rgba(0,0,0,0.2);
+}
+input{
+  border: 1px solid #ccc;
+  padding: 7px 0px;
+  border-radius: 3px;
+  padding-left:5px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
+}
+input:focus{
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
 }
 </style>
