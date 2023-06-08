@@ -104,6 +104,7 @@ def add_staff(request):
         res_id.append(data['plot_id'])
     return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
 
+
 def add_staff_main(request):   #insert
     staff_id=request.POST.get('staff_id')
     join_time=request.POST.get('join_id')
@@ -115,6 +116,7 @@ def add_staff_main(request):   #insert
     staff_add=staff(staff_id=staff_id,join_id=join_time,name=name,username=username,password=password)
     staff.scenic_plot=plot_id
     staff_add.save()
+    return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 def update_staff_main(request):   #update
     staff_id=request.POST.get('staff_id')
@@ -124,6 +126,7 @@ def update_staff_main(request):   #update
     password=request.POST.get('password')
     plot_id=request.POST.get('scenic_plot_id')
     staff.objects.filter(staff_id=staff_id).update(join_id=join_time,name=name,username=username,password=password,scenic_plot=plot_id)
+    return JsonResponse('修改成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 
 
