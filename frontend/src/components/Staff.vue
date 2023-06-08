@@ -11,12 +11,12 @@
         <div style="flex:1;overflow: hidden;">
           <div>加入时间<br><input type="text" v-model="join_id"></div>
           <div>用户名<br><input type="text" v-model="username"></div>
-          <div>所属景点<br><input type="text" v-model="plot"></div>
+          <div>所属景点<br><input type="text" v-model="scenic_plot_id"></div>
         </div>
       </div>
       <div id="footer">
-        <button @click="add_commit()">&ensp;&ensp;&ensp;确认&ensp;&ensp;&ensp;</button>
-        <button @click="cancel()">&ensp;&ensp;&ensp;取消&ensp;&ensp;&ensp;</button>
+        <button style="background-color:#28a745;" @click="add_commit()">&ensp;&ensp;&ensp;确认&ensp;&ensp;&ensp;</button>
+        <button style="background-color:#dc3545;" @click="cancel()">&ensp;&ensp;&ensp;取消&ensp;&ensp;&ensp;</button>
       </div>
     </div>
     <div id="popAdd" v-if="showChange">
@@ -33,7 +33,10 @@
           <div>所属景点<br><input type="text" v-model="scenic_plot_id"></div>
         </div>
       </div>
-      <div id="footer"><button @click="change_commit()">&ensp;&ensp;&ensp;确认&ensp;&ensp;&ensp;</button></div>
+      <div id="footer">
+        <button style="background-color:#28a745;" @click="change_commit()">&ensp;&ensp;&ensp;确认&ensp;&ensp;&ensp;</button>
+        <button style="background-color:#dc3545;" @click="cancel()">&ensp;&ensp;&ensp;取消&ensp;&ensp;&ensp;</button>
+      </div>
     </div>
     <div id="left">
       <ul>
@@ -125,28 +128,46 @@ export default{
     },
     add_commit(){
       this.showAdd=0;
-			this.axios.post('http://localhost:8000/api/add_staff/insert/',{
+			this.axios({
+        method:"post",
+        url:"http://localhost:8000/api/add_staff/insert/",
+        data:{
         staff_id:this.staff_id,
         join_id:this.join_id,
         name:this.name,
         username:this.username,
         password:this.password,
         scenic_plot_id:this.scenic_plot_id,
-      }
-      )
+        },
+        headers: {'Content-Type': 'multipart/form-data'},
+      });
+      setTimeout(() => {
+        this.$options.methods.getdata.bind(this)();
+	    }, 100);
     },
     change_commit(){
       this.showChange=0;
-			this.axios.post('http://localhost:8000/api/add_staff/update/',{
+			this.axios({
+        method:"post",
+        url:"http://localhost:8000/api/add_staff/update/",
+        data:{
         staff_id:this.staff_id,
         join_id:this.join_id,
         name:this.name,
         username:this.username,
         password:this.password,
         scenic_plot_id:this.scenic_plot_id,
-      }
-      )
+        },
+        headers: {'Content-Type': 'multipart/form-data'},
+      });
+      setTimeout(() => {
+        this.$options.methods.getdata.bind(this)();
+	    }, 100);
     },
+    cancel(){
+      this.showAdd=0;
+      this.showChange=0;
+    }
   }
 }
 </script>
@@ -176,7 +197,7 @@ export default{
   width: 100%;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  background-color: rgb(56,183,145);
+  background-color: rgb(57,167,176);
   color: #fff;
   flex: 3;
   font-size: 30px;
@@ -200,7 +221,6 @@ export default{
   flex: 1;
 }
 #popAdd button{
-  background-color: rgb(57,167,176);
   color: #fff;
   padding: 10px;
   margin: 20px;
