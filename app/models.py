@@ -1,6 +1,7 @@
 from django.db import models
 
 # Create your models here.
+
 class staff(models.Model):#人员表
     staff_id=models.IntegerField(primary_key=True,db_index=True)
     join_id=models.DateTimeField(auto_now=False)

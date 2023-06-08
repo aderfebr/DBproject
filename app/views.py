@@ -102,17 +102,16 @@ def add_staff(request):
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
 def add_staff_main(request):
-    staff_id=request.GET.get('staff_id')
-    join_time=request.GET.get('join_id')
-    name=request.GET.get('name')
-    username=request.GET.get('username')
-    password=request.GET.get('password')
-    plot_id=request.GET.get('scenic_plot_id')
+    staff_id=request.POST.get('staff_id')
+    join_time=request.POST.get('join_id')
+    name=request.POST.get('name')
+    username=request.POST.get('username')
+    password=request.POST.get('password')
+    plot_id=request.POST.get('scenic_plot_id')
 
     staff_add=staff(staff_id=staff_id,join_id=join_time,name=name,username=username,password=password)
     staff.scenic_plot=plot_id
     staff_add.save()
-
 
 
 
