@@ -3,15 +3,19 @@
     <div id="popAdd" v-if="showAdd">
       <div id="header">&ensp;添加数据</div>
       <div id="body">
-        <div style="flex:1;overflow: hidden;">
+        <div style="flex:1;">
           <div>员工编号<br><input type="text" v-model="staff_id"></div>
           <div>姓名<br><input type="text" v-model="name"></div>
           <div>密码<br><input type="text" v-model="password"></div>
         </div>
-        <div style="flex:1;overflow: hidden;">
+        <div style="flex:1;">
           <div>加入时间<br><input type="text" v-model="join_id"></div>
           <div>用户名<br><input type="text" v-model="username"></div>
-          <div>所属景点<br><input type="text" v-model="scenic_plot_id"></div>
+          <div>所属景点<br>
+            <select v-model="scenic_plot_id">
+              <option v-for="i in plot">{{i}}</option>
+            </select>
+          </div>
         </div>
       </div>
       <div id="footer">
@@ -22,15 +26,19 @@
     <div id="popAdd" v-if="showChange">
       <div id="header">&ensp;更改数据</div>
       <div id="body">
-        <div style="flex:1;overflow: hidden;">
+        <div style="flex:1;">
           <div>员工编号<br><input type="text" v-model="staff_id" readonly="readonly"></div>
           <div>姓名<br><input type="text" v-model="name"></div>
           <div>密码<br><input type="text" v-model="password"></div>
         </div>
-        <div style="flex:1;overflow: hidden;">
+        <div style="flex:1;">
           <div>加入时间<br><input type="text" v-model="join_id"></div>
           <div>用户名<br><input type="text" v-model="username"></div>
-          <div>所属景点<br><input type="text" v-model="scenic_plot_id"></div>
+          <div>所属景点<br>
+            <select v-model="scenic_plot_id">
+              <option v-for="i in plot">{{i}}</option>
+            </select>
+          </div>
         </div>
       </div>
       <div id="footer">
@@ -42,6 +50,11 @@
       <ul>
         <li><router-link to="/"><i class="fa fa-home"/>&ensp;首页</router-link></li>
         <li id="selected"><router-link to="/"><i class="fa fa-street-view"/>&ensp;人员</router-link></li>
+        <li><router-link to="/area"><i class="fa fa-map-marker"/>&ensp;区域</router-link></li>
+        <li><router-link to="/device"><i class="fa fa-wrench"/>&ensp;设备</router-link></li>
+        <li><router-link to="/security"><i class="fa fa-shield"/>&ensp;安保系统</router-link></li>
+        <li><router-link to="/maintain"><i class="fa fa-archive"/>&ensp;运维系统</router-link></li>
+        <li><router-link to="/alarm"><i class="fa fa-bell"/>&ensp;警报处理</router-link></li>
       </ul>
     </div>
     <div id="right">
@@ -74,7 +87,7 @@
               <td>{{ i.username }}</td>
               <td>{{ i.password }}</td>
               <td>{{ i.scenic_plot_id }}</td>
-              <td><button id="change" @click="change(i)">更改</button>&ensp;<button id="delete">删除</button></td>
+              <td><button id="change" @click="change(i)">更改</button>&ensp;<button id="delete" @click="del(i)">删除</button></td>
             </tr>
           </tbody>
         </table>
@@ -88,6 +101,7 @@ export default{
   data(){
     return{
       content:null,
+      plot:null,
       showAdd:0,
       showChange:0,
       staff_id:"",
@@ -106,7 +120,11 @@ export default{
 			this.axios.get('http://localhost:8000/api/query/')
 			.then(res=>{
 				this.content=res.data
-			})
+			});
+      this.axios.get('http://localhost:8000/api/add_staff/')
+			.then(res=>{
+				this.plot=res.data
+			});
 		},
     add(i){
       this.staff_id="";
@@ -132,12 +150,12 @@ export default{
         method:"post",
         url:"http://localhost:8000/api/add_staff/insert/",
         data:{
-        staff_id:this.staff_id,
-        join_id:this.join_id,
-        name:this.name,
-        username:this.username,
-        password:this.password,
-        scenic_plot_id:this.scenic_plot_id,
+          staff_id:this.staff_id,
+          join_id:this.join_id,
+          name:this.name,
+          username:this.username,
+          password:this.password,
+          scenic_plot_id:this.scenic_plot_id,
         },
         headers: {'Content-Type': 'multipart/form-data'},
       });
@@ -151,12 +169,25 @@ export default{
         method:"post",
         url:"http://localhost:8000/api/add_staff/update/",
         data:{
-        staff_id:this.staff_id,
-        join_id:this.join_id,
-        name:this.name,
-        username:this.username,
-        password:this.password,
-        scenic_plot_id:this.scenic_plot_id,
+          staff_id:this.staff_id,
+          join_id:this.join_id,
+          name:this.name,
+          username:this.username,
+          password:this.password,
+          scenic_plot_id:this.scenic_plot_id,
+        },
+        headers: {'Content-Type': 'multipart/form-data'},
+      });
+      setTimeout(() => {
+        this.$options.methods.getdata.bind(this)();
+	    }, 100);
+    },
+    del(i){
+			this.axios({
+        method:"post",
+        url:"http://localhost:8000/api/add_staff/delete/",
+        data:{
+          staff_id:i.staff_id,
         },
         headers: {'Content-Type': 'multipart/form-data'},
       });
@@ -211,8 +242,15 @@ export default{
   display: flex;
 }
 #popAdd #body input{
+  width: 90%;
   margin: 5px;
   height: 25px;
+  font-size: 20px;
+}
+#popAdd #body select{
+  width: 92%;
+  margin: 5px;
+  height: 40px;
   font-size: 20px;
 }
 #popAdd #footer{
@@ -341,6 +379,23 @@ input{
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
 }
 input:focus{
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+}
+select{
+  border: 1px solid #ccc;
+  padding: 7px 0px;
+  border-radius: 3px;
+  padding-left:5px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
+}
+select:focus{
   border-color: #66afe9;
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
