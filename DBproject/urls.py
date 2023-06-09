@@ -26,4 +26,5 @@ urlpatterns = [
     path("api/add_staff/",views.add_staff),
     path("api/add_staff/insert/",views.add_staff_main),
     path("api/add_staff/update/",views.update_staff_main),
+    path("api/add_staff/delete/",views.delete_staff_main),
 ]
