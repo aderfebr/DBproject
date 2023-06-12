@@ -22,9 +22,22 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("test/",views.insert_test_sc),
     path("delete/",views.delete_data),
-    path("api/query/",views.query),
-    path("api/add_staff/",views.add_staff),
+
+    path("api/query/",views.staff_query),
+    path("api/add_staff/",views.staff_foreignkey),
     path("api/add_staff/insert/",views.add_staff_main),
     path("api/add_staff/update/",views.update_staff_main),
     path("api/add_staff/delete/",views.delete_staff_main),
+
+    path("api/area_query/",views.area_query),            #区域表展示返回位置
+    path("api/area_foreignkey/",views.area_foreignkey),  #区域表下拉框位置
+    path("api/add_area/",views.add_area_main),           #区域表insert位置
+    path("api/update_area/",views.update_area_main),     #区域表update位置
+    path("api/delete_area/",views.delete_area_main),     #区域表delete位置
+
+    path("api/device_query/",views.device_query),        #设备表展示返回位置
+    path("api/device_foreignkey/",views.device_foreignkey),#设备表下拉框位置
+    path("api/add_device/",views.add_device_main),#设备表insert位置
+    path("api/update_device/",views.update_device_main),#设备表update位置
+    path("api/delete_device/",views.delete_device_main),#设备表delete位置
 ]

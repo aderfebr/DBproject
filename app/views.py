@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import staff,security_personnel,maintain_personnel,scenic_plot,area
+from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device
 from random import random,randint,choice
 import json
 import datetime
@@ -66,7 +66,6 @@ def insert_test_sc(request):
     insert_test()
     secstaff()
     mainstaff()
-    insertarea()
     return HttpResponse("success")
 
 def insert_test():
@@ -84,19 +83,22 @@ def mainstaff():
     for i in range(15):
         sec= maintain_personnel(staff_id=staff.objects.get(staff_id=i+10015),professional_field="无")
         sec.save()
-def insertarea():
-    for i in range(5):
-        sec=area(area_id=i,area_device="摄像头",area_name="未命名",plot_id=scenic_plot.objects.get(plot_id=1))
-        sec.save()
 
 
-def query(request):
+
+
+###########################################👆人员表测试数据👆#########################################################
+
+
+
+######################人员表增删改查############################
+def staff_query(request):
     res=staff.objects.all().values()
     res=list(res)
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
-###########################################👆测试数据👆#########################################################
 
-def add_staff(request):
+
+def staff_foreignkey(request):
     res=scenic_plot.objects.all().values('plot_id')
     res=list(res)
     res_id=[]
@@ -115,16 +117,20 @@ def add_staff_main(request):   #insert
 
     staff_add=staff(staff_id=staff_id,join_id=join_time,name=name,username=username,password=password)
     staff_add.scenic_plot=scenic_plot.objects.get(plot_id=plot_id)
+    
     staff_add.save()
     return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 def update_staff_main(request):   #update
     staff_id=request.POST.get('staff_id')
+    
     join_time=request.POST.get('join_id')
     name=request.POST.get('name')
     username=request.POST.get('username')
     password=request.POST.get('password')
     plot_id=request.POST.get('scenic_plot_id')
+
+
     staff.objects.filter(staff_id=staff_id).update(join_id=join_time,name=name,username=username,password=password,scenic_plot=plot_id)
     return JsonResponse('修改成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
@@ -133,6 +139,107 @@ def delete_staff_main(request):   #insert
     staff_id=request.POST.get('staff_id')
     staff.objects.filter(staff_id=staff_id).delete()
     return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+
+######################区域表增删改查############################
+
+def area_query(request):
+    res=area.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def area_foreignkey(request):
+    res=scenic_plot.objects.all().values('plot_id')
+    res=list(res)
+    res_id=[]
+    for data in res:
+        res_id.append(data['plot_id'])
+    return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def add_area_main(request):   #insert
+    area_id=request.POST.get('area_id')
+    area_device=request.POST.get('area_device')
+    area_name=request.POST.get('area_name')
+    plot_id=request.POST.get('scenic_plot_id')
+    area_add=area(area_id=area_id,area_device=area_device,area_name=area_name)
+    area_add.plot_id=scenic_plot.objects.get(plot_id=plot_id)
+    area_add.save()
+    return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+def update_area_main(request):   #update
+    area_id=request.POST.get('area_id')
+    area_device=request.POST.get('area_device')
+    area_name=request.POST.get('area_name')
+    plot_id=request.POST.get('scenic_plot_id')
+    area.objects.filter(area_id=area_id).update(area_device=area_device,area_name=area_name,plot_id=plot_id)
+    return JsonResponse('修改成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+
+def delete_area_main(request):   #insert
+    area_id=request.POST.get('staff_id')
+    area.objects.filter(area_id=area_id).delete()
+    return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+
+######################设备表增删改查############################
+
+
+
+def device_query(request):
+    res=device.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def device_foreignkey(request):
+    res=area.objects.all().values('area_id')
+    res=list(res)
+    res_id=[]
+    for data in res:
+        res_id.append(data['plot_id'])
+    return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def add_device_main(request):   #insert
+    device_id=request.POST.get('device_id')
+    device_name=request.POST.get('device_name')
+    manufacturer=request.POST.get('manufacturer')
+    production_date=request.POST.get('production_date')
+    function=request.POST.get('function')
+    area_id=request.POST.get('area_id')
+    device_add=device(device_id=device_id,device_name=device_name,manufacturer=manufacturer,production_date=production_date,function=function)
+    device_add.area_id=area.objects.get(area_id=area_id)
+    device_add.save()
+    return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+def update_device_main(request):   #update
+    device_id=request.POST.get('device_id')
+    device_name=request.POST.get('device_name')
+    manufacturer=request.POST.get('manufacturer')
+    production_date=request.POST.get('production_date')
+    function=request.POST.get('function')
+    area_id=request.POST.get('area_id')
+    device.objects.filter(device_id=device_id).update(device_name=device_name,manufacturer=manufacturer,production_date=production_date,function=function,area_id=area_id)
+    return JsonResponse('修改成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+
+def delete_device_main(request):   #insert
+    device_id=request.POST.get('device_id')
+    device.objects.filter(device_id=device_id).delete()
+    return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
