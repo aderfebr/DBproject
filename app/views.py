@@ -195,7 +195,7 @@ def device_foreignkey(request):
     res=list(res)
     res_id=[]
     for data in res:
-        res_id.append(data['plot_id'])
+        res_id.append(data['area_id'])
     return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
 
 def add_device_main(request):   #insert

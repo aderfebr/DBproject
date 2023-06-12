@@ -9,10 +9,24 @@ class staff(models.Model):#人员表
     username=models.CharField(max_length=50,null=True)
     password=models.CharField(max_length=50,null=True)
     scenic_plot=models.ForeignKey(to='scenic_plot',on_delete=models.CASCADE)
+    class Meta:
+        app_label="app" 
 
 class security_personnel(models.Model):#安保人员
     staff_id=models.ForeignKey(to='staff',on_delete=models.CASCADE,primary_key=True)
     grade=models.CharField(max_length=50,null=True)
+    class Meta:
+        app_label="app" 
+
+class security_personnel_views(models.Model):
+    staff_id=models.CharField(max_length=50,primary_key=True,db_index=True)
+    join_id=models.DateTimeField(auto_now=False)
+    name=models.CharField(max_length=200,null=True)
+    class Meta:
+        app_label="app" 
+        managed = False 
+        db_table = "security_view" 
+
 
 class maintain_personnel(models.Model):#运维
     staff_id=models.ForeignKey(to='staff',on_delete=models.CASCADE,primary_key=True)
