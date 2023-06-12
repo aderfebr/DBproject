@@ -160,7 +160,7 @@ def add_area_main(request):   #insert
     area_id=request.POST.get('area_id')
     area_device=request.POST.get('area_device')
     area_name=request.POST.get('area_name')
-    plot_id=request.POST.get('scenic_plot_id')
+    plot_id=request.POST.get('plot_id_id')
     area_add=area(area_id=area_id,area_device=area_device,area_name=area_name)
     area_add.plot_id=scenic_plot.objects.get(plot_id=plot_id)
     area_add.save()
@@ -170,13 +170,13 @@ def update_area_main(request):   #update
     area_id=request.POST.get('area_id')
     area_device=request.POST.get('area_device')
     area_name=request.POST.get('area_name')
-    plot_id=request.POST.get('scenic_plot_id')
+    plot_id=request.POST.get('plot_id_id')
     area.objects.filter(area_id=area_id).update(area_device=area_device,area_name=area_name,plot_id=plot_id)
     return JsonResponse('修改成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 
 def delete_area_main(request):   #insert
-    area_id=request.POST.get('staff_id')
+    area_id=request.POST.get('area_id')
     area.objects.filter(area_id=area_id).delete()
     return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
