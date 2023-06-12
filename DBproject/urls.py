@@ -40,4 +40,7 @@ urlpatterns = [
     path("api/add_device/",views.add_device_main),#设备表insert位置
     path("api/update_device/",views.update_device_main),#设备表update位置
     path("api/delete_device/",views.delete_device_main),#设备表delete位置
+
+    path("api/security_view/",views.security_view_query),
+    path("api/maintain_view/",views.maintain_view_query),
 ]

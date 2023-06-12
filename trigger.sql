@@ -58,3 +58,24 @@ values
 (14,'报警器5','上海市YYY公司','2020-3-6','人流量超限时发出警报',5),
 (15,'扩音器5','上海市ZZZ公司','2020-5-28','警报通知',5)
 
+
+create view security_view
+as
+select 
+staff_id,join_id,name
+from
+app_staff,app_security_personnel
+where 
+app_staff.staff_id=app_security_personnel.staff_id_id;
+
+create view maintain_view
+as
+select 
+staff_id,join_id,name
+from
+app_staff,app_maintain_personnel 
+where 
+app_staff.staff_id=app_maintain_personnel.staff_id_id;
+
+drop view security_view;
+drop view maintain_view;

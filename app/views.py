@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device
+from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view
 from random import random,randint,choice
 import json
 import datetime
@@ -203,9 +203,9 @@ def add_device_main(request):   #insert
     device_name=request.POST.get('device_name')
     manufacturer=request.POST.get('manufacturer')
     production_date=request.POST.get('production_date')
-    function=request.POST.get('function')
+    func=request.POST.get('func')
     area_id=request.POST.get('area_id')
-    device_add=device(device_id=device_id,device_name=device_name,manufacturer=manufacturer,production_date=production_date,function=function)
+    device_add=device(device_id=device_id,device_name=device_name,manufacturer=manufacturer,production_date=production_date,func=func)
     device_add.area_id=area.objects.get(area_id=area_id)
     device_add.save()
     return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
@@ -215,9 +215,9 @@ def update_device_main(request):   #update
     device_name=request.POST.get('device_name')
     manufacturer=request.POST.get('manufacturer')
     production_date=request.POST.get('production_date')
-    function=request.POST.get('function')
+    func=request.POST.get('func')
     area_id=request.POST.get('area_id')
-    device.objects.filter(device_id=device_id).update(device_name=device_name,manufacturer=manufacturer,production_date=production_date,function=function,area_id=area_id)
+    device.objects.filter(device_id=device_id).update(device_name=device_name,manufacturer=manufacturer,production_date=production_date,func=func,area_id=area_id)
     return JsonResponse('修改成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 
@@ -229,11 +229,15 @@ def delete_device_main(request):   #insert
 
 
 
+def security_view_query(request):
+    res=security_view.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
-
-
-
-
+def maintain_view_query(request):
+    res=maintain_view.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
 
 

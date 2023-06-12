@@ -18,7 +18,7 @@ class security_personnel(models.Model):#安保人员
     class Meta:
         app_label="app" 
 
-class security_personnel_views(models.Model):
+class security_view(models.Model):   #视图
     staff_id=models.CharField(max_length=50,primary_key=True,db_index=True)
     join_id=models.DateTimeField(auto_now=False)
     name=models.CharField(max_length=200,null=True)
@@ -27,10 +27,20 @@ class security_personnel_views(models.Model):
         managed = False 
         db_table = "security_view" 
 
+class maintain_view(models.Model):   #视图
+    staff_id=models.CharField(max_length=50,primary_key=True,db_index=True)
+    join_id=models.DateTimeField(auto_now=False)
+    name=models.CharField(max_length=200,null=True)
+    class Meta:
+        app_label="app" 
+        managed = False 
+        db_table = "maintain_view" 
 
 class maintain_personnel(models.Model):#运维
     staff_id=models.ForeignKey(to='staff',on_delete=models.CASCADE,primary_key=True)
     professional_field=models.CharField(max_length=50,null=True)
+    class Meta:
+        app_label="app" 
 
 class scenic_plot(models.Model):#景点
     plot_id=models.IntegerField(primary_key=True)
@@ -38,17 +48,17 @@ class scenic_plot(models.Model):#景点
     plot_address=models.CharField(max_length=100,null=True)
 
 class area(models.Model):#区域表
-    area_id=models.IntegerField(primary_key=True)
+    area_id=models.CharField(max_length=20,primary_key=True)
     area_device=models.CharField(max_length=100,null=True)
     area_name=models.CharField(max_length=50,null=True)
     plot_id=models.ForeignKey(to='scenic_plot',on_delete=models.CASCADE)
 
 class device(models.Model):#设备表
-    device_id=models.IntegerField(primary_key=True)
+    device_id=models.CharField(max_length=20,primary_key=True)
     device_name=models.CharField(max_length=100,null=True)
     manufacturer=models.CharField(max_length=100,null=True)
     production_date=models.DateTimeField(auto_now=False)
-    function=models.CharField(max_length=200,null=True)
+    func=models.CharField(max_length=200,null=True)
     area_id=models.ForeignKey(to="area",on_delete=models.CASCADE)
     
 
