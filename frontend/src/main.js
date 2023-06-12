@@ -9,7 +9,10 @@ import 'font-awesome/css/font-awesome.min.css'
 const router = createRouter({
     history: createWebHashHistory(),
     routes:[
+        { path: '/', component: ()=> import('./components/Home.vue') },
         { path: '/staff', component: ()=> import('./components/Staff.vue') },
+        { path: '/area', component: ()=> import('./components/Area.vue') },
+        { path: '/device', component: ()=> import('./components/Device.vue') },
     ]
 })
 

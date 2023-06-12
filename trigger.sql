@@ -40,7 +40,7 @@ values
 (5,"普通设施",'区域5','2')
 
 insert into
-app_device(device_id,device_name,manufacturer,production_date,`function`,area_id_id)
+app_device(device_id,device_name,manufacturer,production_date,func,area_id_id)
 values
 (1,'摄像头1','上海市XXX公司','2020-5-20','监控人流量',1),
 (2,'报警器1','上海市YYY公司','2019-10-5','人流量超限时发出警报',1),

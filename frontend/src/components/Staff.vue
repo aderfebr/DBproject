@@ -49,7 +49,7 @@
     <div id="left">
       <ul>
         <li><router-link to="/"><i class="fa fa-home"/>&ensp;首页</router-link></li>
-        <li id="selected"><router-link to="/"><i class="fa fa-street-view"/>&ensp;人员</router-link></li>
+        <li id="selected"><router-link to="/staff"><i class="fa fa-street-view"/>&ensp;人员</router-link></li>
         <li><router-link to="/area"><i class="fa fa-map-marker"/>&ensp;区域</router-link></li>
         <li><router-link to="/device"><i class="fa fa-wrench"/>&ensp;设备</router-link></li>
         <li><router-link to="/security"><i class="fa fa-shield"/>&ensp;安保系统</router-link></li>
