@@ -249,9 +249,10 @@ def warn_query(request):
 
 def deal_warning(request):
     id=request.POST.get('id')
-    warning.objects.filter(id=id).delete()
+    warning.objects.filter(id=id).update(info='已处理')
     return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
+#######################安保单#########################
 
 
 
