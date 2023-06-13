@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view
+from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view,warning
 from random import random,randint,choice
 import json
 import datetime
@@ -240,6 +240,17 @@ def maintain_view_query(request):
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
 
+
+#######################警报处理######################
+def warn_query(request):
+    res=warning.objects.filter(info='未处理').all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def deal_warning(request):
+    id=request.POST.get('id')
+    warning.objects.filter(id=id).delete()
+    return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 
 
