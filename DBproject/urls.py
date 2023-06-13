@@ -43,4 +43,7 @@ urlpatterns = [
 
     path("api/security_view/",views.security_view_query),
     path("api/maintain_view/",views.maintain_view_query),
+
+    path("api/warn/",views.warn_query),
+    path("api/deal_warn/",views.deal_warning),
 ]
