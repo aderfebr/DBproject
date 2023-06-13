@@ -10,7 +10,7 @@ create table trace_update_staff(
     update_password varchar(50),
     update_plot_id varchar(50),
     PRIMARY KEY (id)
-);
+);                                #创建记录表
 
 
 
@@ -21,6 +21,28 @@ begin
    INSERT INTO trace_update_staff(update_time,update_staff_id,update_join_id,update_name,update_username,update_password,update_plot_id) 
    values(NOW(),new.staff_id,new.join_id,new.name,new.username,new.password,new.scenic_plot_id);
 end;
+#用户update记录触发器
+
+CREATE TRIGGER staff_job 
+AFTER insert ON app_staff 
+FOR EACH row
+begin
+	begin
+		if new.staff_id like '1%' then
+		insert into app_security_personnel(staff_id_id)
+		values
+		(new.staff_id);
+		else
+		insert into app_maintain_personnel(staff_id_id)
+		values
+		(new.staff_id);
+		end if;
+	end;
+end;
+#工作分类触发器
+
+drop trigger staff_job
+
 
 
 

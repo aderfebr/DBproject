@@ -69,19 +69,28 @@ def insert_test_sc(request):
     return HttpResponse("success")
 
 def insert_test():
-    for i in range(30):
-        staff_insert=staff(staff_id=i+10000,join_id=datetime.datetime.now(),name=randomname(),username=randomusername()
-                           ,password=randompass())
+    for i in range(15):
+        staff_insert=staff(staff_id=str(i+10000),join_id=datetime.datetime.now(),name=randomname(),username=randomusername()
+                                ,password=randompass)
+        staff_insert.staff_id=staff_insert.staff_id
         staff_insert.scenic_plot=scenic_plot.objects.get(plot_id=1)
         staff_insert.save()
+    for i in range(15):
+        staff_insert=staff(staff_id=str(i+20000),join_id=datetime.datetime.now(),name=randomname(),username=randomusername()
+                                ,password=randompass())
+        staff_insert.staff_id=staff_insert.staff_id
+        staff_insert.scenic_plot=scenic_plot.objects.get(plot_id=1)
+        staff_insert.save()
+
+       
 def secstaff():
     for i in range(15):
-        sec= security_personnel(staff_id=staff.objects.get(staff_id=i+10000),grade=i)
+        sec= security_personnel(staff_id=staff.objects.get(staff_id=str(i+10000)),grade=i)
         sec.save()
 
 def mainstaff():
     for i in range(15):
-        sec= maintain_personnel(staff_id=staff.objects.get(staff_id=i+10015),professional_field="无")
+        sec= maintain_personnel(staff_id=staff.objects.get(staff_id=str(i+20000)),professional_field="无")
         sec.save()
 
 
@@ -256,6 +265,7 @@ def deal_warning(request):
 
 
 
+    
 
 
 
