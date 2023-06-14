@@ -79,7 +79,7 @@ class security_report(models.Model):
 
 class maintain_report(models.Model):
     staff_id=models.ForeignKey(to="maintain_personnel",on_delete=models.CASCADE)
-    mreport_id=models.IntegerField(primary_key=True)
+    mreport_id=models.AutoField(primary_key=True)
     mreport_date=models.DateTimeField(auto_now=False)
     device_id=models.ForeignKey(to="device",on_delete=models.CASCADE)
     mreport=models.CharField(max_length=500,null=True)
