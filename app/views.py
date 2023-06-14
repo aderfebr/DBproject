@@ -362,29 +362,23 @@ def mdelete_report(request):
 
 
 def query_crowdvis(request):
+
     res=crowdvis.objects.all().values()
     res=list(res)
+    
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
 
 def sta1(request):
-    res=staff.objects.all().count()
-    print(res)
-    res=str(res)
-    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
-
-def sta2(request):
-    res=security_view.objects.all().count()
-    print(res)
-    res=str(res)
+    res=[]
+    res0=crowdvis.objects.all().count()
+    res1=staff.objects.all().count()
+    res2=security_view.objects.all().count()
+    res3=maintain_view.objects.all().count()
+    res={'a':[i for i in range(res0)],'b':res1,'c':res2,'d':res3}
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
 
-def sta3(request):
-    res=maintain_view.objects.all().count()
-    print(res)
-    res=str(res)
-    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
 
 def home(request):

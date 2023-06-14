@@ -63,6 +63,4 @@ urlpatterns = [
 
     path('api/crowdvis/',views.query_crowdvis),
     path('api/sta1/',views.sta1),
-    path('api/sta2/',views.sta2),    
-    path('api/sta2/',views.sta3),    
 ]
