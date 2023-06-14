@@ -4,15 +4,15 @@
       <div id="header">&ensp;添加数据</div>
       <div id="body">
         <div style="flex:1;">
-          <div>巡视时间<br><input type="text" v-model="sreport_date"></div>
-          <div>区域编号<br>
-            <select v-model="area_id_id">
-              <option v-for="i in area">{{i}}</option>
+          <div>维护时间<br><input type="text" v-model="mreport_date"></div>
+          <div>设备编号<br>
+            <select v-model="device_id_id">
+              <option v-for="i in device">{{i}}</option>
             </select>
           </div>
         </div>
         <div style="flex:1;">
-          <div>巡视描述<br><input type="text" v-model="sreport"></div>
+          <div>维护描述<br><input type="text" v-model="mreport"></div>
         </div>
       </div>
       <div id="footer">
@@ -24,8 +24,8 @@
       <div id="header">&ensp;更改数据</div>
       <div id="body">
         <div style="flex:1;">
-          <div>巡视单编号<br><input type="text" v-model="sreport_id" readonly="readonly"></div>
-          <div>巡视描述<br><input type="text" v-model="sreport"></div>
+          <div>维护单编号<br><input type="text" v-model="mreport_id" readonly="readonly"></div>
+          <div>维护描述<br><input type="text" v-model="mreport"></div>
           <div>员工编号<br>
             <select v-model="staff_id_id">
               <option v-for="i in staff">{{i}}</option>
@@ -33,10 +33,10 @@
           </div>
         </div>
         <div style="flex:1;">
-          <div>巡视时间<br><input type="text" v-model="sreport_date"></div>
-          <div>区域编号<br>
-            <select v-model="area_id_id">
-              <option v-for="i in area">{{i}}</option>
+          <div>维护时间<br><input type="text" v-model="mreport_date"></div>
+          <div>设备编号<br>
+            <select v-model="device_id_id">
+              <option v-for="i in device">{{i}}</option>
             </select>
           </div>
         </div>
@@ -86,25 +86,25 @@
         </table>
       </div>
       <div id="container" v-if="info">
-        <h2><button id="back" @click="close();"><i class="fa fa-arrow-circle-left" />&ensp;返回</button>|&ensp;巡视单&ensp;|&ensp;当前安保人员编号：{{ showid }}&ensp;|&ensp;<button id="add" @click="add()">添加</button></h2>
+        <h2><button id="back" @click="close();"><i class="fa fa-arrow-circle-left" />&ensp;返回</button>|&ensp;维护单&ensp;|&ensp;当前运维人员编号：{{ showid }}&ensp;|&ensp;<button id="add" @click="add()">添加</button></h2>
         <br>
         <table>
           <thead>
             <tr>
-              <th>巡视单编号</th>
-              <th>巡视时间</th>
-              <th>巡视描述</th>
-              <th>区域编号</th>
+              <th>维护单编号</th>
+              <th>维护时间</th>
+              <th>维护描述</th>
+              <th>设备编号</th>
               <th>员工编号</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="i in content">
-              <td>{{ i.sreport_id }}</td>
-              <td>{{ i.sreport_date }}</td>
-              <td>{{ i.sreport }}</td>
-              <td>{{ i.area_id_id }}</td>
+              <td>{{ i.mreport_id }}</td>
+              <td>{{ i.mreport_date }}</td>
+              <td>{{ i.mreport }}</td>
+              <td>{{ i.device_id_id }}</td>
               <td>{{ i.staff_id_id }}</td>
               <td><button id="change" @click="change(i)">更改</button>&ensp;<button id="delete" @click="del(i)">删除</button></td>
             </tr>
@@ -120,17 +120,17 @@ export default{
   data(){
     return{
       content:null,
-      area:null,
+      device:null,
       staff:null,
       detail:null,
       info:0,
       showid:0,
       showAdd:0,
       showChange:0,
-      sreport_id:"",
-      sreport_date:"",
-      sreport:"",
-      area_id_id:"",
+      mreport_id:"",
+      mreport_date:"",
+      mreport:"",
+      device_id_id:"",
       staff_id_id:"",
     }
   },
@@ -139,14 +139,14 @@ export default{
   },
   methods:{
 		getdata(){
-			this.axios.get('http://localhost:8000/api/security_view/')
+			this.axios.get('http://localhost:8000/api/maintain_view/')
 			.then(res=>{
 				this.content=res.data
 			});
 		},
     open(i){
       this.info=1;
-      this.axios.get('http://localhost:8000/api/report/query/',{
+      this.axios.get('http://localhost:8000/api/mreport/query/',{
         params:{
           staff_id_id:i,
         }
@@ -155,11 +155,11 @@ export default{
 				this.content=res.data
 			});
       this.showid=i;
-      this.axios.get('http://localhost:8000/api/report/forkry1/')
+      this.axios.get('http://localhost:8000/api/mreport/forkry1/')
 			.then(res=>{
-				this.area=res.data
+				this.device=res.data
 			});
-      this.axios.get('http://localhost:8000/api/report/forkry2/')
+      this.axios.get('http://localhost:8000/api/mreport/forkry2/')
 			.then(res=>{
 				this.staff=res.data
 			});
@@ -169,16 +169,16 @@ export default{
       this.$options.methods.getdata.bind(this)();
     },
     add(){
-      this.sreport_date="";
-      this.sreport="";
-      this.area_id_id="",
+      this.mreport_date="";
+      this.mreport="";
+      this.device_id_id="",
       this.showAdd=1;
     },
     change(i){
-      this.sreport_id=i.sreport_id;
-      this.sreport_date=i.sreport_date;
-      this.sreport=i.sreport;
-      this.area_id_id=i.area_id_id,
+      this.mreport_id=i.mreport_id;
+      this.mreport_date=i.mreport_date;
+      this.mreport=i.mreport;
+      this.device_id_id=i.device_id_id,
       this.staff_id_id=i.staff_id_id,
       this.showChange=1;
     },
@@ -186,11 +186,11 @@ export default{
       this.showAdd=0;
 			this.axios({
         method:"post",
-        url:"http://localhost:8000/api/report/add/",
+        url:"http://localhost:8000/api/mreport/add/",
         data:{
-          sreport_date:this.sreport_date,
-          sreport:this.sreport,
-          area_id_id:this.area_id_id,
+          mreport_date:this.mreport_date,
+          mreport:this.mreport,
+          device_id_id:this.device_id_id,
           staff_id_id:this.showid,
         },
         headers: {'Content-Type': 'multipart/form-data'},
@@ -203,12 +203,12 @@ export default{
       this.showChange=0;
 			this.axios({
         method:"post",
-        url:"http://localhost:8000/api/report/update/",
+        url:"http://localhost:8000/api/mreport/update/",
         data:{
-          sreport_id:this.sreport_id,
-          sreport_date:this.sreport_date,
-          sreport:this.sreport,
-          area_id_id:this.area_id_id,
+          mreport_id:this.mreport_id,
+          mreport_date:this.mreport_date,
+          mreport:this.mreport,
+          device_id_id:this.device_id_id,
           staff_id_id:this.staff_id_id,
         },
         headers: {'Content-Type': 'multipart/form-data'},
@@ -220,9 +220,9 @@ export default{
     del(i){
 			this.axios({
         method:"post",
-        url:"http://localhost:8000/api/report/delete/",
+        url:"http://localhost:8000/api/mreport/delete/",
         data:{
-          sreport_id:i.sreport_id,
+          mreport_id:i.mreport_id,
         },
         headers: {'Content-Type': 'multipart/form-data'},
       });
