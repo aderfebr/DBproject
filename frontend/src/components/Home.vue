@@ -153,32 +153,6 @@
     border: #aaa .5px solid;
     text-align: center;
   }
-  button{
-    border: none;
-    border-radius: 5px;
-    padding: 5% 10%;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  button#add{
-    width: 80px;
-    height: 55px;
-    background-color: #28a745;
-    color: #fff;
-    font-size: 25px;
-    font-weight: bolder;
-  }
-  button#change{
-    background-color: #ffc107;
-    color: #000;
-  }
-  button#delete{
-    background-color: #dc3545;
-    color: #fff;
-  }
-  button:hover{
-    filter: grayscale(50%);
-  }
   a{
     color: white;
     text-decoration: none;

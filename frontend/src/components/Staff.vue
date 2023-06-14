@@ -126,7 +126,7 @@ export default{
 				this.plot=res.data
 			});
 		},
-    add(i){
+    add(){
       this.staff_id="";
       this.join_id="";
       this.name="";

@@ -116,7 +116,7 @@ export default{
 				this.plot=res.data
 			});
 		},
-    add(i){
+    add(){
       this.area_id="";
       this.area_device="";
       this.area_name="";

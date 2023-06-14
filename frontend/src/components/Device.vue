@@ -126,7 +126,7 @@ export default{
 				this.plot=res.data
 			});
 		},
-    add(i){
+    add(){
       this.device_id="";
       this.device_name="";
       this.manufacturer="";
