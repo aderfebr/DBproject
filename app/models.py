@@ -43,18 +43,18 @@ class maintain_personnel(models.Model):#运维
         app_label="app" 
 
 class scenic_plot(models.Model):#景点
-    plot_id=models.IntegerField(primary_key=True)
+    plot_id=models.IntegerField(primary_key=True,db_index=True)
     plot_name=models.CharField(max_length=50,null=True)
     plot_address=models.CharField(max_length=100,null=True)
 
 class area(models.Model):#区域表
-    area_id=models.CharField(max_length=20,primary_key=True)
+    area_id=models.CharField(max_length=20,primary_key=True,db_index=True)
     area_device=models.CharField(max_length=100,null=True)
     area_name=models.CharField(max_length=50,null=True)
     plot_id=models.ForeignKey(to='scenic_plot',on_delete=models.CASCADE)
 
 class device(models.Model):#设备表
-    device_id=models.CharField(max_length=20,primary_key=True)
+    device_id=models.CharField(max_length=20,primary_key=True,db_index=True)
     device_name=models.CharField(max_length=100,null=True)
     manufacturer=models.CharField(max_length=100,null=True)
     production_date=models.DateTimeField(auto_now=False)
@@ -70,7 +70,7 @@ class crowdvis(models.Model):#人流量
     device_id=models.ForeignKey(to="device",on_delete=models.CASCADE,null=True)
 
 class security_report(models.Model):
-    staff_id=models.ForeignKey(to="security_personnel",on_delete=models.CASCADE)
+    staff_id=models.ForeignKey(to="security_personnel",on_delete=models.CASCADE,db_index=True)
     sreport_id=models.AutoField(primary_key=True)
     sreport_date=models.DateTimeField(auto_now=False)
     sreport=models.CharField(max_length=500,null=True)
@@ -78,7 +78,7 @@ class security_report(models.Model):
 
 
 class maintain_report(models.Model):
-    staff_id=models.ForeignKey(to="maintain_personnel",on_delete=models.CASCADE)
+    staff_id=models.ForeignKey(to="maintain_personnel",on_delete=models.CASCADE,db_index=True)
     mreport_id=models.AutoField(primary_key=True)
     mreport_date=models.DateTimeField(auto_now=False)
     device_id=models.ForeignKey(to="device",on_delete=models.CASCADE)
@@ -93,3 +93,28 @@ class warning(models.Model):
     warn_area = models.CharField(max_length=50, null=True)
     warn_description = models.CharField(max_length=50, null=True)
     info = models.CharField(max_length=50, null=True)
+
+
+class trace_update_staff(models.Model):
+    id=models.AutoField(primary_key=True)
+    user_info=models.CharField(max_length=50,null=True)
+    update_time=models.DateField(auto_now=False)
+    update_staff_id=models.CharField(max_length=50,null=True)
+    update_join_id=models.CharField(max_length=50,null=True)
+    update_name=models.CharField(max_length=50,null=True)
+    update_username=models.CharField(max_length=50,null=True)
+    update_password=models.CharField(max_length=50,null=True)
+    update_plot_id=models.CharField(max_length=50,null=True)
+
+'''create table trace_update_staff(
+ 	id int NOT NULL AUTO_INCREMENT,
+ 	user_info varchar(50),
+    update_time varchar(50),
+    update_staff_id varchar(50),
+    update_join_id varchar(50),
+    update_name varchar(50),
+    update_username varchar(50),
+    update_password varchar(50),
+    update_plot_id varchar(50),
+    PRIMARY KEY (id)
+);'''

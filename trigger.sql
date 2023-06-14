@@ -1,56 +1,11 @@
 use project;
-
-create table trace_update_staff(
- 	id int NOT NULL AUTO_INCREMENT,
- 	user_info varchar(50),
-    update_time varchar(50),
-    update_staff_id varchar(50),
-    update_join_id varchar(50),
-    update_name varchar(50),
-    update_username varchar(50),
-    update_password varchar(50),
-    update_plot_id varchar(50),
-    PRIMARY KEY (id)
-);
-
-
-
-CREATE TRIGGER log_staff_operation 
-AFTER UPDATE ON app_staff 
-FOR EACH row
-begin
-   INSERT INTO trace_update_staff(user_info,update_time,update_staff_id,update_join_id,update_name,update_username,update_password,update_plot_id) 
-   values(user(),NOW(),new.staff_id,new.join_id,new.name,new.username,new.password,new.scenic_plot_id);
-end;
-
-CREATE TRIGGER staff_job 
-AFTER insert ON app_staff 
-FOR EACH row
-begin
-	begin
-		if new.staff_id like '1%' then
-		insert into app_security_personnel(staff_id_id)
-		values
-		(new.staff_id);
-		else
-		insert into app_maintain_personnel(staff_id_id)
-		values
-		(new.staff_id);
-		end if;
-	end;
-end;
-
-drop trigger staff_job
-
-
-
-
+#插入数据及创建Tabel 
 insert into 
 app_scenic_plot 
 values
 (1,'景点1','上海市'),
 (2,'景点2','上海市'),
-(3,'景点3','上海市')
+(3,'景点3','上海市');
 
 insert into 
 app_area 
@@ -59,7 +14,8 @@ values
 ('1002a',"观光设施",'区域2','1'),
 ('1003a',"休闲设施",'区域3','2'),
 ('1004a',"观光设施",'区域4','3'),
-('1005a',"普通设施",'区域5','2')
+('1005a',"普通设施",'区域5','2');
+
 
 insert into
 app_device(device_id,device_name,manufacturer,production_date,func,area_id_id)
@@ -90,7 +46,6 @@ values
 ('2023-6-9','出流量超限','区域3','无描述','未处理','1005d'),
 ('2023-6-9','滞留流量超限','区域5','无描述','未处理','1002d'),
 ('2023-6-8','出现打架行为','区域4','无描述','未处理','1005d');
-
 
 insert into 
 app_security_report(sreport_date,sreport,area_id_id,staff_id_id)
@@ -135,17 +90,60 @@ values
 ('2023-6-9','设备无异常情况','1005d','20008'),
 ('2023-6-10','设备无异常情况','1006d','20009')
 
-select staff_id,join_id,name,username,password,scenic_plot_id,grade
-from app_staff a,app_security_personnel b
-where a.staff_id = b.staff_id_id 
+insert into app_crowdvis(total_count,vis_count,in_count,out_count,device_id_id)
+values
+(50,20,10,30,'1001d'),
+(80,25,15,28,'1004d'),
+(30,5,5,8,'1007d'),
+(70,50,10,10,'1010d');
+
+create table depart_staff(
+	id int NOT NULL AUTO_INCREMENT,
+	staff_id varchar(50),
+	name varchar(50),
+	depart_time varchar(50),
+	PRIMARY KEY (id)
+);
+
+#触发器
+
+CREATE TRIGGER log_staff_operation 
+AFTER UPDATE ON app_staff 
+FOR EACH row
+begin
+   INSERT INTO app_trace_update_staff(user_info,update_time,update_staff_id,update_join_id,update_name,update_username,update_password,update_plot_id) 
+   values(user(),NOW(),new.staff_id,new.join_id,new.name,new.username,new.password,new.scenic_plot_id);
+end;
+
+drop trigger log_staff_operation 
+
+CREATE TRIGGER staff_job 
+AFTER insert ON app_staff 
+FOR EACH row
+begin
+		if new.staff_id like '1%' then
+		insert into app_security_personnel(staff_id_id)
+		values
+		(new.staff_id);
+		else
+		insert into app_maintain_personnel(staff_id_id)
+		values
+		(new.staff_id);
+		end if;
+end;
 
 
-select sreport_id,sreport_date,staff_id_id,id,sreport,area_id_id,sreport_id_id 
-from app_security_report a,app_security_report_area b 
-where a.sreport_id = b.sreport_id_id
+create trigger depart_staff
+after delete on app_staff
+for each row
+begin
+	insert into 
+	depart_staff(staff_id,name,depart_time)
+	values(old.staff_id,old.name,NOW());
+end;
 
 
-
+#创建视图
 create view security_view
 as
 select 
@@ -164,8 +162,7 @@ app_staff,app_maintain_personnel
 where 
 app_staff.staff_id=app_maintain_personnel.staff_id_id;
 
-drop view security_view;
-drop view maintain_view;
+
 
 
 
