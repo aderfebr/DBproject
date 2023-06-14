@@ -2,6 +2,7 @@ use project;
 
 create table trace_update_staff(
  	id int NOT NULL AUTO_INCREMENT,
+ 	user_info varchar(50),
     update_time varchar(50),
     update_staff_id varchar(50),
     update_join_id varchar(50),
@@ -18,8 +19,8 @@ CREATE TRIGGER log_staff_operation
 AFTER UPDATE ON app_staff 
 FOR EACH row
 begin
-   INSERT INTO trace_update_staff(update_time,update_staff_id,update_join_id,update_name,update_username,update_password,update_plot_id) 
-   values(NOW(),new.staff_id,new.join_id,new.name,new.username,new.password,new.scenic_plot_id);
+   INSERT INTO trace_update_staff(user_info,update_time,update_staff_id,update_join_id,update_name,update_username,update_password,update_plot_id) 
+   values(user(),NOW(),new.staff_id,new.join_id,new.name,new.username,new.password,new.scenic_plot_id);
 end;
 
 CREATE TRIGGER staff_job 
@@ -118,6 +119,21 @@ values
 ('2023-6-12','有紧急情况导致人流量滞留，已进行疏散','1003a','10006')
 
 
+insert into 
+app_maintain_report(mreport_date,mreport,device_id_id,staff_id_id)
+values
+('2023-6-1','设备无异常情况','1002d','20001'),
+('2023-6-2','设备无异常情况','1001d','20001'),
+('2023-6-3','摄像头故障，已解决','1004d','20002'),
+('2023-6-3','报警器故障，已解决','1008d','20003'),
+('2023-6-4','设备无异常情况','1010d','20010'),
+('2023-6-5','设备无异常情况','1011d','20005'),
+('2023-6-5','设备无异常情况','1008d','20004'),
+('2023-6-6','设备无异常情况','1002d','20011'),
+('2023-6-7','设备无异常情况','1004d','20002'),
+('2023-6-8','设备无异常情况','1007d','20003'),
+('2023-6-9','设备无异常情况','1005d','20008'),
+('2023-6-10','设备无异常情况','1006d','20009')
 
 select staff_id,join_id,name,username,password,scenic_plot_id,grade
 from app_staff a,app_security_personnel b
@@ -150,6 +166,7 @@ app_staff.staff_id=app_maintain_personnel.staff_id_id;
 
 drop view security_view;
 drop view maintain_view;
+
 
 
 
