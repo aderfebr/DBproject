@@ -267,8 +267,11 @@ def report_query_s1(request):
     staff_id=request.GET.get('staff_id_id')
     res=[]
     res1=security_report.objects.raw('select sreport_id,sreport_date,staff_id_id,id,sreport,area_id_id,sreport_id_id from app_security_report a,app_security_report_area b where a.sreport_id = b.sreport_id_id')
+
     for p in res1:
-        res.append([p.sreport_id,p.sreport_date,p.staff_id_id,p.sreport,p.area_id_id])
+        if str(p.staff_id_id)==staff_id:
+            res.append([p.sreport_id,p.sreport_date,p.staff_id_id,p.sreport,p.area_id_id])
+
 
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
@@ -285,8 +288,16 @@ def add_sreport(request):
             sreport=str(sreport)
             sreport1=sreport.split(';')
             for str1 in sreport1:
-                security_report_area.objects.filter(sreport_id=sreport_id_id,area_id=area_id_id,sreport=str1)
-       
+                sec=security_report_area(sreport_id=sreport_id_id,area_id=area_id_id,sreport=str1)
+                sec.save()
+    sec=security_report(sreport_date=sreport_date,staff_id=staff_id_id)
+    sec.save()
+    sreport=str(sreport)
+    sreport1=sreport.split(';')
+    for str1 in sreport1:
+        sec=security_report_area(sreport_id=sreport_id_id,area_id=area_id_id,sreport=str1)
+        sec.save()
+    return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 
 

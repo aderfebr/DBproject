@@ -48,6 +48,6 @@ urlpatterns = [
     path("api/deal_warn/",views.deal_warning),
     
     path('api/query/sreport/',views.report_query_s1),              #传staff_id_id
-      #传sreport_id_id
+
     path('api/add/sreport',views.add_sreport),                      #传staff_id_id与sreport_date                
 ]
