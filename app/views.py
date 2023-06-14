@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view,warning,security_report,maintain_report
+from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view,warning,security_report,maintain_report,crowdvis
 from random import random,randint,choice
 import json
 import datetime
@@ -361,9 +361,11 @@ def mdelete_report(request):
     return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 
-
-
-
+def query_crowdvis(request):
+    res=crowdvis.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+    
 
 
 

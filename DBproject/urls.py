@@ -60,5 +60,7 @@ urlpatterns = [
     path('api/mreport/add/',views.madd_report),
     path('api/mreport/update/',views.mupdate_report),
     path('api/mreport/delete/',views.mdelete_report),
+
+    path('api/crowdvis/',views.query_crowdvis)
                  
 ]
