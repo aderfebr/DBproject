@@ -10,7 +10,7 @@ create table trace_update_staff(
     update_password varchar(50),
     update_plot_id varchar(50),
     PRIMARY KEY (id)
-);                                #创建记录表
+);
 
 
 
@@ -21,7 +21,6 @@ begin
    INSERT INTO trace_update_staff(update_time,update_staff_id,update_join_id,update_name,update_username,update_password,update_plot_id) 
    values(NOW(),new.staff_id,new.join_id,new.name,new.username,new.password,new.scenic_plot_id);
 end;
-#用户update记录触发器
 
 CREATE TRIGGER staff_job 
 AFTER insert ON app_staff 
@@ -39,7 +38,6 @@ begin
 		end if;
 	end;
 end;
-#工作分类触发器
 
 drop trigger staff_job
 
@@ -51,8 +49,7 @@ app_scenic_plot
 values
 (1,'景点1','上海市'),
 (2,'景点2','上海市'),
-(3,'景点3','上海市');
-
+(3,'景点3','上海市')
 insert into 
 app_area 
 values
@@ -60,7 +57,7 @@ values
 ('1002a',"观光设施",'区域2','1'),
 ('1003a',"休闲设施",'区域3','2'),
 ('1004a',"观光设施",'区域4','3'),
-('1005a',"普通设施",'区域5','2');
+('1005a',"普通设施",'区域5','2')
 
 insert into
 app_device(device_id,device_name,manufacturer,production_date,func,area_id_id)
@@ -93,6 +90,46 @@ values
 ('2023-6-8','出现打架行为','区域4','无描述','未处理','1005d');
 
 
+insert into 
+app_security_report(sreport_date,staff_id_id)
+values
+('2023-6-10','10001'),
+('2023-6-11','10001'),
+('2023-6-12','10001'),
+('2023-6-12','10002'),
+('2023-6-14','10003'),
+('2023-6-11','10005'),
+('2023-6-9','10005'),
+('2023-6-11','10005'),
+('2023-6-11','10010'),
+('2023-6-1','10010'),
+('2023-6-5','10007'),
+('2023-6-10','10004'),
+('2023-6-7','10004'),
+('2023-6-6','10006'),
+('2023-6-11','10005')
+
+insert into 
+app_security_report_area(sreport,area_id_id,sreport_id_id)
+values
+('区域1无异常情况','1002a',31),
+('区域1无异常情况','1001a',32),
+('区域2无异常情况','1002a',32),
+('区域3无异常情况','1003a',32),
+('区域1总人流量超限，实施人流疏导工作','1001a',33),
+('区域2无异常情况','1001a',33),
+('区域1有紧急情况导致人流量滞留，已进行疏散','1001a',34),
+('区域2无异常情况','1001a',34)
+
+
+
+
+
+
+
+select staff_id,join_id,name,username,password,scenic_plot_id,grade
+from app_staff a,app_security_personnel b
+where a.staff_id = b.staff_id_id 
 
 
 create view security_view

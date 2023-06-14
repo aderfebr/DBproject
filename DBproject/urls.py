@@ -46,4 +46,9 @@ urlpatterns = [
 
     path("api/warn/",views.warn_query),
     path("api/deal_warn/",views.deal_warning),
+    
+    path('api/query/sreport/',views.report_query_s1),              #传staff_id_id
+    path('api/query/sreport_area/',views.report_query_s2),         #传sreport_id_id
+    path('api/add/sreport',views.add_sreport),                      #传staff_id_id与sreport_date
+    path('api/add/sreport_area',views.add_sreport),                 #传area_id下拉框,sreport，sreport_id_id
 ]

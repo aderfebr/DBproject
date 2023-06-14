@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view,warning
+from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view,warning,security_report,security_report_area
 from random import random,randint,choice
 import json
 import datetime
@@ -263,9 +263,30 @@ def deal_warning(request):
 
 #######################安保单#########################
 
+def report_query_s1(request):
+    staff_id=request.POST.get('staff_id_id')
+    res=security_report.objects.filter(staff_id=staff_id).all().values()
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
+def report_query_s2(request):
+    report_id=request.POST.get('sreport_id_id')
+    res=security_report_area.objects.filter(sreport_id=report_id).all().values()
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
-    
+def add_sreport(request):
+    staff_id=request.POST.get('staff_id_id')
+    sreport_date=request.POST.get('sreport_date')
+    security_report_add=security_report(staff_id=staff_id,sreport_date=sreport_date)
+    security_report_add.save()
+    return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+def add_sreport_area(request):
+    area_id=request.POST.get('area_id_id')
+    sreport=request.POST.get('sreport')
+    sreport_id_id=request.POST.get('sreport_id_id')
+    security_report_add=security_report_area(area_id=area_id,sreport=sreport,sreport_id=sreport_id_id)
+    security_report_add.save()
+    return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 
 
