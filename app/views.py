@@ -319,7 +319,7 @@ def mreport_query(request):
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
 
-def mreport_foreignkey_area(request):
+def mreport_foreignkey_device(request):
     res=device.objects.all().values('device_id')
     res=list(res)
     res_id=[]
@@ -340,7 +340,7 @@ def madd_report(request):
     mreport=request.POST.get('mreport')
     device_id_id=request.POST.get('device_id_id')
     staff_id_id=request.POST.get('staff_id_id')
-    mradd=security_report(mreport_date=mreport_date,mreport=mreport,device_id_id=device_id_id,staff_id_id=staff_id_id)
+    mradd=maintain_report(mreport_date=mreport_date,mreport=mreport,device_id_id=device_id_id,staff_id_id=staff_id_id)
     mradd.save()
     return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
@@ -350,7 +350,7 @@ def mupdate_report(request):
     mreport=request.POST.get('mreport')
     device_id_id=request.POST.get('device_id_id')
     staff_id_id=request.POST.get('staff_id_id')
-    security_report.objects.filter(mreport_id=mreport_id).update(mreport_date=mreport_date,mreport=mreport,device_id_id=device_id_id,staff_id_id=staff_id_id)
+    maintain_report.objects.filter(mreport_id=mreport_id).update(mreport_date=mreport_date,mreport=mreport,device_id_id=device_id_id,staff_id_id=staff_id_id)
 
     return JsonResponse('修改成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
