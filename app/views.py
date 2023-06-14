@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view,warning,security_report
+from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view,warning,security_report,maintain_report
 from random import random,randint,choice
 import json
 import datetime
@@ -285,12 +285,11 @@ def report_foreignkey_staff(request):
     return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
 
 def add_report(request):
-    sreport_id=request.POST.get('sreport_id')
     sreport_date=request.POST.get('sreport_date')
     sreport=request.POST.get('sreport')
     area_id_id=request.POST.get('area_id_id')
     staff_id_id=request.POST.get('staff_id_id')
-    sradd=security_report(sreport_id=sreport_id,sreport_date=sreport_date,sreport=sreport,area_id_id=area_id_id,staff_id_id=staff_id_id)
+    sradd=security_report(sreport_date=sreport_date,sreport=sreport,area_id_id=area_id_id,staff_id_id=staff_id_id)
     sradd.save()
     return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
@@ -309,6 +308,65 @@ def delete_report(request):
     sreport_id=request.POST.get('sreport_id')
     security_report.objects.filter(sreport_id=sreport_id).delete()
     return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+#######################维护单#########################
+#mreport_id,mreport_date,mreport,device_id_id,staff_id_id
+
+def mreport_query(request):
+    staff_id=request.GET.get('staff_id_id')
+    res=maintain_report.objects.filter(staff_id=staff_id).all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+
+def mreport_foreignkey_area(request):
+    res=device.objects.all().values('device_id')
+    res=list(res)
+    res_id=[]
+    for data in res:
+        res_id.append(data['device_id'])
+    return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def mreport_foreignkey_staff(request):
+    res=maintain_view.objects.all().values('staff_id')
+    res=list(res)
+    res_id=[]
+    for data in res:
+        res_id.append(data['staff_id'])
+    return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def madd_report(request):
+    mreport_date=request.POST.get('mreport_date')
+    mreport=request.POST.get('mreport')
+    device_id_id=request.POST.get('device_id_id')
+    staff_id_id=request.POST.get('staff_id_id')
+    mradd=security_report(mreport_date=mreport_date,mreport=mreport,device_id_id=device_id_id,staff_id_id=staff_id_id)
+    mradd.save()
+    return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+def mupdate_report(request):
+    mreport_id=request.POST.get('mreport_id')
+    mreport_date=request.POST.get('mreport_date')
+    mreport=request.POST.get('mreport')
+    device_id_id=request.POST.get('device_id_id')
+    staff_id_id=request.POST.get('staff_id_id')
+    security_report.objects.filter(mreport_id=mreport_id).update(mreport_date=mreport_date,mreport=mreport,device_id_id=device_id_id,staff_id_id=staff_id_id)
+
+    return JsonResponse('修改成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+
+def mdelete_report(request):   
+    mreport_id=request.POST.get('mreport_id')
+    maintain_report.objects.filter(mreport_id=mreport_id).delete()
+    return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+
+
+
+
+
+
+
 
 def home(request):
     return render(request, "index.html")

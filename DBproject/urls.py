@@ -53,5 +53,12 @@ urlpatterns = [
     path('api/report/add/',views.add_report),
     path('api/report/update/',views.update_report),
     path('api/report/delete/',views.delete_report),
+
+    path('api/mreport/query/',views.mreport_query),
+    path('api/mreport/forkry1/',views.mreport_foreignkey_area),
+    path('api/mreport/forkry2/',views.mreport_foreignkey_staff),
+    path('api/mreport/add/',views.madd_report),
+    path('api/mreport/update/',views.mupdate_report),
+    path('api/mreport/delete/',views.mdelete_report),
                  
 ]
