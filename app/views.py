@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view,warning,security_report,security_report_area
+from .models import staff,security_personnel,maintain_personnel,scenic_plot,area,device,security_view,maintain_view,warning,security_report
 from random import random,randint,choice
 import json
 import datetime
@@ -61,8 +61,6 @@ def delete_data(request):
     return HttpResponse("success")
 
 def insert_test_sc(request):
-    sc_plot=scenic_plot(plot_id=1,plot_name="景点",plot_address="上海市")
-    sc_plot.save()
     insert_test()
     secstaff()
     mainstaff()
@@ -263,43 +261,54 @@ def deal_warning(request):
 
 #######################安保单#########################
 
-def report_query_s1(request):
+def report_query(request):
     staff_id=request.GET.get('staff_id_id')
-    res=[]
-    res1=security_report.objects.raw('select sreport_id,sreport_date,staff_id_id,id,sreport,area_id_id,sreport_id_id from app_security_report a,app_security_report_area b where a.sreport_id = b.sreport_id_id')
-
-    for p in res1:
-        if str(p.staff_id_id)==staff_id:
-            res.append([p.sreport_id,p.sreport_date,p.staff_id_id,p.sreport,p.area_id_id])
-
-
+    res=security_report.objects.filter(staff_id=staff_id).all().values()
+    res=list(res)
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
 
 
+def report_foreignkey_area(request):
+    res=area.objects.all().values('area_id')
+    res=list(res)
+    res_id=[]
+    for data in res:
+        res_id.append(data['area_id'])
+    return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
 
-def add_sreport(request):
+def report_foreignkey_staff(request):
+    res=security_view.objects.all().values('staff_id')
+    res=list(res)
+    res_id=[]
+    for data in res:
+        res_id.append(data['staff_id'])
+    return JsonResponse(res_id, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def add_report(request):
+    sreport_id=request.POST.get('sreport_id')
     sreport_date=request.POST.get('sreport_date')
-    staff_id_id=request.POST.get('staff_id_id')
     sreport=request.POST.get('sreport')
     area_id_id=request.POST.get('area_id_id')
-    sreport_id_id=request.POST.get('sreport_id_id')
-    for p in security_report.objects.raw('select sreport_id from app_security_report'):
-        if p.sreport_id==sreport_id_id:
-            sreport=str(sreport)
-            sreport1=sreport.split(';')
-            for str1 in sreport1:
-                sec=security_report_area(sreport_id=sreport_id_id,area_id=area_id_id,sreport=str1)
-                sec.save()
-    sec=security_report(sreport_date=sreport_date,staff_id=staff_id_id)
-    sec.save()
-    sreport=str(sreport)
-    sreport1=sreport.split(';')
-    for str1 in sreport1:
-        sec=security_report_area(sreport_id=sreport_id_id,area_id=area_id_id,sreport=str1)
-        sec.save()
+    staff_id_id=request.POST.get('staff_id_id')
+    sradd=security_report(sreport_id=sreport_id,sreport_date=sreport_date,sreport=sreport,area_id_id=area_id_id,staff_id_id=staff_id_id)
+    sradd.save()
     return JsonResponse('添加成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
+def update_report(request):
+    sreport_id=request.POST.get('sreport_id')
+    sreport_date=request.POST.get('sreport_date')
+    sreport=request.POST.get('sreport')
+    area_id_id=request.POST.get('area_id_id')
+    staff_id_id=request.POST.get('staff_id_id')
+    security_report.objects.filter(sreport_id=sreport_id).update(sreport_date=sreport_date,sreport=sreport,area_id_id=area_id_id,staff_id_id=staff_id_id)
 
+    return JsonResponse('修改成功',json_dumps_params={"ensure_ascii": False},safe=False)
+
+
+def delete_report(request):   
+    sreport_id=request.POST.get('sreport_id')
+    security_report.objects.filter(sreport_id=sreport_id).delete()
+    return JsonResponse('删除成功',json_dumps_params={"ensure_ascii": False},safe=False)
 
 def home(request):
     return render(request, "index.html")

@@ -46,8 +46,12 @@ urlpatterns = [
 
     path("api/warn/",views.warn_query),
     path("api/deal_warn/",views.deal_warning),
-    
-    path('api/query/sreport/',views.report_query_s1),              #传staff_id_id
 
-    path('api/add/sreport',views.add_sreport),                      #传staff_id_id与sreport_date                
+    path('api/report/query/',views.report_query),
+    path('api/report/forkry1/',views.report_foreignkey_area),
+    path('api/report/forkry2/',views.report_foreignkey_staff),
+    path('api/report/add/',views.add_report),
+    path('api/report/update/',views.update_report),
+    path('api/report/delete/',views.delete_report),
+                 
 ]

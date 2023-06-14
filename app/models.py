@@ -73,25 +73,17 @@ class security_report(models.Model):
     staff_id=models.ForeignKey(to="security_personnel",on_delete=models.CASCADE)
     sreport_id=models.AutoField(primary_key=True)
     sreport_date=models.DateTimeField(auto_now=False)
-
-class security_report_area(models.Model):
-    sreport_id=models.ForeignKey(to="security_report",on_delete=models.CASCADE)
-    area_id=models.ForeignKey(to="area",on_delete=models.CASCADE)
     sreport=models.CharField(max_length=500,null=True)
-    class meta:
-        unique_together=("sreport_id","area_id")
+    area_id=models.ForeignKey(to="area",on_delete=models.CASCADE)
+
 
 class maintain_report(models.Model):
     staff_id=models.ForeignKey(to="maintain_personnel",on_delete=models.CASCADE)
     mreport_id=models.IntegerField(primary_key=True)
     mreport_date=models.DateTimeField(auto_now=False)
-
-class maintain_report_device(models.Model):
-    mreport_id=models.ForeignKey(to="maintain_report",on_delete=models.CASCADE)
     device_id=models.ForeignKey(to="device",on_delete=models.CASCADE)
     mreport=models.CharField(max_length=500,null=True)
-    class meta:
-        unique_together=("mreport_id","device_id")
+
 
 
 class warning(models.Model):
