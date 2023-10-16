@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import 物料表,调配构成表,库存表
+from .models import 物料表,调配构成表,库存表,MPS
 import json
 import math
 import datetime
@@ -18,10 +18,37 @@ class node():
 def home(request):
     return render(request, "index.html")
 
-def print(request):
+def wuliao(request):
+    res=物料表.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def kucun(request):
+    res=库存表.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def tiaopei(request):
     res=调配构成表.objects.all().values()
     res=list(res)
     return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def mps(request):
+    res=MPS.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def add_mps(request):
+    name=request.POST.get('name')
+    num=request.POST.get('num')
+    date=request.POST.get('date')
+    mps=MPS(产品名称=name,数量=num,完工日期=date)
+    mps.save()
+    return HttpResponse("添加成功")
+
+def clear_mps(request):
+    MPS.objects.all().delete()
+    return HttpResponse("清空成功")
 
 def answer(request):
     name="眼镜"

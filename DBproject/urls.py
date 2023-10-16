@@ -18,6 +18,11 @@ from app import views
 
 urlpatterns = [
     path('',views.home),
-    path('print/',views.print),
+    path('api/wuliao/',views.wuliao),
+    path('api/kucun/',views.kucun),
+    path('api/tiaopei/',views.tiaopei),
+    path('api/mps/',views.mps),
+    path('api/add_mps/',views.add_mps),
+    path('api/clear_mps/',views.clear_mps),
     path('answer/',views.answer)
 ]

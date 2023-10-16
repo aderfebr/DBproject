@@ -39,3 +39,12 @@ class 调配构成表(models.Model):
         managed = False
         db_table = '调配构成表'
         unique_together = (('父物料号', '子物料号'),)
+
+class MPS(models.Model):
+    产品名称 = models.CharField(max_length=45, blank=True, null=True)
+    数量 = models.IntegerField(blank=True, null=True)
+    完工日期 = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'mps'
