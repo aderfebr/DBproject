@@ -24,5 +24,10 @@ urlpatterns = [
     path('api/mps/',views.mps),
     path('api/add_mps/',views.add_mps),
     path('api/clear_mps/',views.clear_mps),
-    path('answer/',views.answer)
+    path('api/answer_mps/',views.answer_mps),
+    path('api/bs/',views.bs),
+    path('api/query_bs/',views.query_bs),
+    path('api/add_bs/',views.add_bs),
+    path('api/clear_bs/',views.clear_bs),
+    path('api/answer_bs/',views.answer_bs),
 ]

@@ -6,6 +6,7 @@
         <li><router-link to="/kucun"><i class="fa fa-map-marker"/>&ensp;库存表</router-link></li>
         <li><router-link to="/tiaopei"><i class="fa fa-wrench"/>&ensp;调配构成表</router-link></li>
         <li><router-link to="/mps"><i class="fa fa-shield"/>&ensp;MPS</router-link></li>
+        <li><router-link to="/bs"><i class="fa fa-archive"/>&ensp;资产负债表</router-link></li>
       </ul>
     </div>
     <div id="right">

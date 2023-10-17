@@ -22,6 +22,7 @@
         <li><router-link to="/kucun"><i class="fa fa-map-marker"/>&ensp;库存表</router-link></li>
         <li><router-link to="/tiaopei"><i class="fa fa-wrench"/>&ensp;调配构成表</router-link></li>
         <li id="selected"><router-link to="/mps"><i class="fa fa-shield"/>&ensp;MPS</router-link></li>
+        <li><router-link to="/bs"><i class="fa fa-archive"/>&ensp;资产负债表</router-link></li>
       </ul>
     </div>
     <div id="right">
@@ -30,6 +31,7 @@
           <li><h1>&ensp;<i class="fa fa-shield"/>&ensp;MPS</h1></li>
           <li><button id="add" @click="add()">添加</button></li>
           <li><button id="clear" @click="clear()">清空</button></li>
+          <li><router-link to="/answer_mps"><button id="answer">计算</button></router-link></li>
         </ul>
         <div style="clear: both;"></div>
       </div>
@@ -250,6 +252,14 @@ button#clear{
   width: 80px;
   height: 55px;
   background-color: #dc3545;
+  color: #fff;
+  font-size: 25px;
+  font-weight: bolder;
+}
+button#answer{
+  width: 80px;
+  height: 55px;
+  background-color: #ffc107;
   color: #fff;
   font-size: 25px;
   font-weight: bolder;

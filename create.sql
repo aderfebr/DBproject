@@ -33,6 +33,29 @@ CREATE TABLE `调配构成表` (
   CONSTRAINT `son` FOREIGN KEY (`子物料号`) REFERENCES `物料表` (`物料号`)
 );
 
+CREATE TABLE `mps` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `产品名称` varchar(45) DEFAULT NULL,
+  `数量` int DEFAULT NULL,
+  `完工日期` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `bs` (
+  `id` int NOT NULL,
+  `资产类说明` varchar(45) DEFAULT NULL,
+  `资产类方向` varchar(45) DEFAULT NULL,
+  `资产类汇总序号` int DEFAULT NULL,
+  `变量名` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `query_bs` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `变量名` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
 INSERT INTO `erp`.`物料表`
 (`物料号`,
 `名称`,
@@ -81,3 +104,32 @@ VALUES
 ("000001","L003",20100,"镜框",20110,"镜架",1,1,20),
 ("000001","L003",20100,"镜框",20120,"镜腿",2,1,10),
 ("000001","L003",20100,"镜框",20130,"鼻托",2,1,18);
+
+INSERT INTO `erp`.`bs`
+(`id`,
+`资产类说明`)
+VALUES
+('1', '流动资产：');
+
+INSERT INTO `erp`.`bs`
+(`id`,
+`资产类说明`,
+`资产类方向`,
+`资产类汇总序号`,
+`变量名`)
+VALUES
+('2', '货币资金', '+', '16', 'a1'),
+('3', '短期投资', '+', '16', 'a3'),
+('4', '应收票据', '+', '16', 'a5'),
+('5', '应收账款', '+', '7', 'a7'),
+('6', '减：坏账准备', '+', '7', 'a9'),
+('7', '应收账款净额', '+', '16', 'b1'),
+('8', '预付账款', '+', '16', 'a12'),
+('9', '应收补贴款', '+', '16', 'a14'),
+('10', '其他应收款', '+', '16', 'a16'),
+('11', '存货', '+', '16', 'a18'),
+('12', '待摊费用', '+', '16', 'a20'),
+('13', '待处理流动资产净损失', '+', '16', 'a22'),
+('14', '一年内到期的长期债券投资', '+', '16', 'a24'),
+('15', '其他流动资产', '+', '16', 'a26'),
+('16', '流动资产合计', '+', '35', 'b3');

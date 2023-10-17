@@ -48,3 +48,21 @@ class MPS(models.Model):
     class Meta:
         managed = False
         db_table = 'mps'
+
+class BS(models.Model):
+    id = models.IntegerField(primary_key=True)
+    资产类说明 = models.CharField(max_length=45, blank=True, null=True)
+    资产类方向 = models.CharField(max_length=45, blank=True, null=True)
+    资产类汇总序号 = models.IntegerField(blank=True, null=True)
+    变量名 = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'bs'
+
+class Query_BS(models.Model):
+    变量名 = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'query_bs'

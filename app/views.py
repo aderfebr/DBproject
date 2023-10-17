@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import 物料表,调配构成表,库存表,MPS
+from .models import 物料表,调配构成表,库存表,MPS,BS,Query_BS
 import json
 import math
 import datetime
@@ -50,13 +50,7 @@ def clear_mps(request):
     MPS.objects.all().delete()
     return HttpResponse("清空成功")
 
-def answer(request):
-    name="眼镜"
-    num=100
-    date_y=2022
-    date_m=5
-    date_d=30
-    date=datetime.date(date_y,date_m,date_d)
+def cal_mps(name,num,date):
     delta=物料表.objects.filter(名称=name).values()[0]["作业提前期"]
     method=物料表.objects.filter(名称=name).values()[0]["调配方式"]
 
@@ -78,9 +72,15 @@ def answer(request):
             delta=i["配料提前期"]+i["供应商提前期"]+物料表.objects.filter(物料号=son).values()[0]["作业提前期"]
             method=物料表.objects.filter(物料号=son).values()[0]["调配方式"]
             queue.append(node(son,name,num,date,delta,method))
-    
+    return ans
+
+def answer_mps(request):
+    ans=[]
+    res=MPS.objects.all().values()
+    for i in res:
+        for j in cal_mps(i["产品名称"],i["数量"],i["完工日期"]):
+            ans.append(j)
     ans=sorted(ans,key=lambda x:x["date_start"])
-    res=[]
 
     for i in ans:
         stock1=库存表.objects.filter(物料号=i["id"]).values()[0]["工序库存"]
@@ -94,4 +94,37 @@ def answer(request):
             i["num"]-=stock_num
             库存表.objects.filter(物料号=i["id"]).update(资材库存=stock2-stock_num)
 
+    ans=sorted(ans,key=lambda x:x["id"])
     return JsonResponse(ans,json_dumps_params={"ensure_ascii": False},safe=False)
+
+def bs(request):
+    res=BS.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def query_bs(request):
+    res=Query_BS.objects.all().values()
+    res=list(res)
+    return JsonResponse(res, json_dumps_params={"ensure_ascii": False},safe=False)
+
+def add_bs(request):
+    name=request.POST.get('name')
+    mps=Query_BS(变量名=name)
+    mps.save()
+    return HttpResponse("添加成功")
+
+def clear_bs(request):
+    Query_BS.objects.all().delete()
+    return HttpResponse("清空成功")
+
+def answer_bs(request):
+    ans=[]
+    res=Query_BS.objects.all().values()
+    for i in res:
+        tmp=""
+        id=BS.objects.filter(变量名=i["变量名"]).values()[0]["id"]
+        for j in BS.objects.filter(资产类汇总序号=id).values():
+            tmp+=j["变量名"]+"+"
+        tmp=tmp[:-1]
+        ans.append({"id":i["变量名"],"ans":tmp})
+    return JsonResponse(ans, json_dumps_params={"ensure_ascii": False},safe=False)
