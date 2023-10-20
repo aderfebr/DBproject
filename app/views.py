@@ -1,19 +1,20 @@
 from django.shortcuts import render
 from .models import 物料表,调配构成表,库存表,MPS,BS,Query_BS
-import json
-import math
 import datetime
-from django.core.paginator import Paginator
+import math
+import pandas as pd
 from django.http import JsonResponse,HttpResponse
 
 class node():
-    def __init__(self,id,name,num,date,delta,method):
-        self.id=id
+    def __init__(self,name,date_start,date_end):
+        self.id=None
         self.name=name
-        self.num=num
-        self.date_start=date-datetime.timedelta(days=delta)
-        self.date_end=date
-        self.method=method
+        self.date_start=date_start
+        self.date_end=date_end
+        self.num=None
+        self.method=None
+        self.tree=None
+        self.father=None
 
 def home(request):
     return render(request, "index.html")
@@ -50,52 +51,58 @@ def clear_mps(request):
     MPS.objects.all().delete()
     return HttpResponse("清空成功")
 
-def cal_mps(name,num,date):
-    delta=物料表.objects.filter(名称=name).values()[0]["作业提前期"]
-    method=物料表.objects.filter(名称=name).values()[0]["调配方式"]
-
-    queue=[]
-    ans=[]
-
-    root=node(物料表.objects.filter(名称=name).values()[0]["物料号"],name,num,date,delta,method)
-    queue.append(root)
-    
-    while len(queue)!=0:
-        father=queue.pop()
-        ans.append({"id":father.id,"name":father.name,"num":father.num,"date_start":father.date_start,"date_end":father.date_end,"method":father.method})
-        tmp=调配构成表.objects.filter(父物料号=father.id).values()
-        for i in tmp:
-            son=i["子物料号_id"]
-            name=i["子物料名称"]
-            num=math.ceil(father.num*i["构成数"]/(1-物料表.objects.filter(物料号=son).values()[0]["损耗率"]))
-            date=father.date_start
-            delta=i["配料提前期"]+i["供应商提前期"]+物料表.objects.filter(物料号=son).values()[0]["作业提前期"]
-            method=物料表.objects.filter(物料号=son).values()[0]["调配方式"]
-            queue.append(node(son,name,num,date,delta,method))
-    return ans
+def cal_mps(father,ans):
+    tree=1
+    tmp=调配构成表.objects.filter(父物料名称=father.name).values()
+    for i in tmp:
+        delta=i["配料提前期"]+i["供应商提前期"]+物料表.objects.filter(物料号=i["子物料号_id"]).values()[0]["作业提前期"]
+        son=node(i["子物料名称"],father.date_start-datetime.timedelta(days=delta),father.date_start)
+        son.father=father
+        tree+=cal_mps(son,ans)
+    father.id=物料表.objects.filter(名称=father.name).values()[0]["物料号"]
+    father.method=物料表.objects.filter(名称=father.name).values()[0]["调配方式"]
+    father.tree=tree
+    ans.append(father)
+    return tree
 
 def answer_mps(request):
     ans=[]
-    res=MPS.objects.all().values()
-    for i in res:
-        for j in cal_mps(i["产品名称"],i["数量"],i["完工日期"]):
-            ans.append(j)
-    ans=sorted(ans,key=lambda x:x["date_start"])
+    mps=MPS.objects.all().values()
+    for i in mps:
+        delta=物料表.objects.filter(名称=i["产品名称"]).values()[0]["作业提前期"]
+        root=node(i["产品名称"],i["完工日期"]-datetime.timedelta(days=delta),i["完工日期"])
+        root.num=i["数量"]
+        cal_mps(root,ans)
+
+    ans=sorted(ans,key=lambda x:(-x.tree,x.date_start))
 
     for i in ans:
-        stock1=库存表.objects.filter(物料号=i["id"]).values()[0]["工序库存"]
-        stock2=库存表.objects.filter(物料号=i["id"]).values()[0]["资材库存"]
+        if i.num is None:
+            for j in ans:
+                if i.father==j:
+                    i.num=math.ceil(j.num*调配构成表.objects.filter(子物料名称=i.name).values()[0]["构成数"]/(1-物料表.objects.filter(名称=i.name).values()[0]["损耗率"]))
+                    break
+        stock1=库存表.objects.filter(物料名称=i.name).values()[0]["工序库存"]
+        stock2=库存表.objects.filter(物料名称=i.name).values()[0]["资材库存"]
         if stock1>0:
-            stock_num=min(i["num"],stock1)
-            i["num"]-=stock_num
-            库存表.objects.filter(物料号=i["id"]).update(工序库存=stock1-stock_num)
+            stock_num=min(i.num,stock1)
+            i.num-=stock_num
+            库存表.objects.filter(物料名称=i.name).update(工序库存=stock1-stock_num)
         if stock2>0:
-            stock_num=min(i["num"],stock2)
-            i["num"]-=stock_num
-            库存表.objects.filter(物料号=i["id"]).update(资材库存=stock2-stock_num)
+            stock_num=min(i.num,stock2)
+            i.num-=stock_num
+            库存表.objects.filter(物料名称=i.name).update(资材库存=stock2-stock_num)
 
-    ans=sorted(ans,key=lambda x:x["id"])
-    return JsonResponse(ans,json_dumps_params={"ensure_ascii": False},safe=False)
+    res=[]
+    for i in ans:
+        if i.num!=0:
+            res.append({"id":i.id,"name":i.name,"date_start":i.date_start,"date_end":i.date_end,"method":i.method,"num":i.num})
+    df=pd.DataFrame(res)
+    grouped=df.groupby(["id","name","date_start","date_end","method"]).sum().reset_index()
+    res=grouped.to_dict(orient="records")
+    res=sorted(res,key=lambda x:(x["id"],x["date_start"]))
+
+    return JsonResponse(res,json_dumps_params={"ensure_ascii": False},safe=False)
 
 def bs(request):
     res=BS.objects.all().values()
