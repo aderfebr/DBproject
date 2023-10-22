@@ -80,7 +80,7 @@ def answer_mps(request):
         if i.num is None:
             for j in ans:
                 if i.father==j:
-                    i.num=math.ceil(j.num*调配构成表.objects.filter(子物料名称=i.name).values()[0]["构成数"]/(1-物料表.objects.filter(名称=i.name).values()[0]["损耗率"]))
+                    i.num=math.ceil(j.num*调配构成表.objects.filter(子物料名称=i.name,父物料名称=j.name).values()[0]["构成数"]/(1-物料表.objects.filter(名称=i.name).values()[0]["损耗率"]))
                     break
         stock1=库存表.objects.filter(物料名称=i.name).values()[0]["工序库存"]
         stock2=库存表.objects.filter(物料名称=i.name).values()[0]["资材库存"]
